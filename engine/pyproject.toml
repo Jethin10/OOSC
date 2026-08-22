@@ -1,0 +1,16 @@
+[project]
+name = "oosc-engine"
+version = "0.1.0"
+description = "Agent evaluation and reliability engine - schema-derived mock worlds, scenario generation, sandboxed replay, failure classification, reliability scorecards"
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.7"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["oosc*"]
+
+[project.scripts]
+oosc = "oosc.cli:main"
