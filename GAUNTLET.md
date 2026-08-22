@@ -68,7 +68,36 @@ morning and write down why.
 If a piece has not won after several rounds, park it with a note on what is blocking it,
 move to the next one, and come back later. Never let one stuck piece hold the whole run.
 
-Commit locally as work lands. Do not push, deploy, or write anywhere outside this directory.
+Commit and push as described below. Do not deploy, and do not write anywhere outside this
+directory.
+
+## The interface
+
+The scorecard is the thing a human actually looks at, so it gets its own bar.
+
+The bar for the interface is Linear, https://linear.app. Open it in a real browser and
+screenshot it at desktop and mobile. Compare against those screenshots directly, not
+against a description of them or a memory of what good design looks like. Density,
+typography, spacing rhythm, keyboard behaviour, empty states, loading states, and the
+restraint of its motion are all in scope.
+
+The measurable half: no interaction takes longer than 100ms to give feedback, and no
+animation drops below 60fps while a full scorecard of real run data is on screen. Pretty
+and janky is a failed round.
+
+No stock gradients, no glassmorphism, no emoji as iconography, no purple-to-blue hero, no
+generic dashboard template. If it looks like it came out of a model, it is not done.
+
+## Pushing
+
+The remote is https://github.com/Jethin10/OOSC.git, already configured as origin with main
+tracking. Auth is set up and verified.
+
+Commit in small honest steps as work lands, and push to origin main every time a piece wins
+its blind comparison, plus any time the progress page changes materially. Write real commit
+messages saying what won and which number moved. The progress page lives in the repo so it
+can be read from a phone. Never force push, never rewrite history, never touch any other
+remote or repository.
 
 ## Progress reporting
 
@@ -80,5 +109,6 @@ morning summary and map what won onto it. Do not let it steer the rounds before 
 
 ## Exit
 
-Keep looping on each piece until the critic picks ours blind and all four numbers clear
-honestly. Do not stop before that.
+Keep looping on each piece until the critic picks ours blind against that piece's own bar,
+and all four engine numbers plus the interface budget clear honestly. Do not stop before
+that.
