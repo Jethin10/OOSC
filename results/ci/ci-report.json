@@ -1,0 +1,368 @@
+{
+ "suite_size": 60,
+ "domain": "retail",
+ "replay_failures": 0,
+ "scorecards": {
+  "clean-agent": {
+   "agent_version": "clean-agent",
+   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "overall": {
+    "runs": 60,
+    "successes": 60,
+    "reliability": 1.0,
+    "ci95": [
+     0.9398,
+     1.0
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 1,
+     "successes": 1,
+     "reliability": 1.0,
+     "ci95": [
+      0.2065,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 28,
+     "successes": 28,
+     "reliability": 1.0,
+     "ci95": [
+      0.8794,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 24,
+     "successes": 24,
+     "reliability": 1.0,
+     "ci95": [
+      0.862,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 7,
+     "successes": 7,
+     "reliability": 1.0,
+     "ci95": [
+      0.6457,
+      1.0
+     ],
+     "failures_by_kind": {}
+    }
+   ]
+  },
+  "loopy-agent": {
+   "agent_version": "loopy-agent",
+   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "overall": {
+    "runs": 60,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.0602
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "tool_loop": 1
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 28,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.1206
+     ],
+     "failures_by_kind": {
+      "tool_loop": 28
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 24,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.138
+     ],
+     "failures_by_kind": {
+      "tool_loop": 24
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 7,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3543
+     ],
+     "failures_by_kind": {
+      "tool_loop": 7
+     }
+    }
+   ]
+  },
+  "overconfident-agent": {
+   "agent_version": "overconfident-agent",
+   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "overall": {
+    "runs": 60,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.0602
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 1
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 28,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.1206
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 28
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 24,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.138
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 24
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 7,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3543
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 7
+     }
+    }
+   ]
+  },
+  "reckless-agent": {
+   "agent_version": "reckless-agent",
+   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "overall": {
+    "runs": 60,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.0602
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "goal_drift": 1
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 28,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.1206
+     ],
+     "failures_by_kind": {
+      "goal_drift": 28
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 24,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.138
+     ],
+     "failures_by_kind": {
+      "goal_drift": 24
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 7,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3543
+     ],
+     "failures_by_kind": {
+      "goal_drift": 7
+     }
+    }
+   ]
+  }
+ },
+ "regressions_vs_clean": {
+  "loopy-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  },
+  "overconfident-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  },
+  "reckless-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  }
+ }
+}
