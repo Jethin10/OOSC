@@ -62,3 +62,16 @@ OOSC pollutes history and risks license confusion (they are MIT, but vendoring w
 repos is noise). Instead, `results/` commits the small extracted artifacts (schemas,
 task counts, hashes) needed to reproduce every number, plus exact clone instructions
 (commit SHA pinned) in `results/repro/`.
+
+## D9 — Rediscovery definition and target (frozen before generation)
+
+Data analysis first: 121/164 tau2 tasks have golden-action arguments fully
+derivable from the initial DB alone (retail 73/114, airline 48/50); the rest
+contain free-text payloads (arbitrary addresses/emails from persona
+instructions) that no schema+data process can conjure. Primary metric: STRICT
+exact-match rediscovery (action names + complete argument equality) over all
+164 tasks, target >= 50%. Structural rediscovery (action names + entity-id
+bindings, free-text ignored) reported alongside with the 73.8% derivability
+ceiling stated. Matching granularity fixed before any generation ran.
+Communicate-info criteria excluded from both sides symmetrically (text-phrasing,
+not tool behavior).
