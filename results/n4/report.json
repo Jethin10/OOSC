@@ -1,0 +1,59 @@
+{
+ "stats": {
+  "cases_total": 629,
+  "reproducible": 626,
+  "flagged_reproducible": 622,
+  "flagged_s1_only": 614,
+  "not_reproducible": 3,
+  "benign_runs": 86,
+  "flagged_benign": 0
+ },
+ "per_suite": {
+  "workspace": {
+   "cases": 231,
+   "repro": 231,
+   "flagged": 231,
+   "benign": 33,
+   "benign_flagged": 0
+  },
+  "slack": {
+   "cases": 119,
+   "repro": 119,
+   "flagged": 119,
+   "benign": 17,
+   "benign_flagged": 0
+  },
+  "travel": {
+   "cases": 140,
+   "repro": 140,
+   "flagged": 140,
+   "benign": 20,
+   "benign_flagged": 0
+  },
+  "banking": {
+   "cases": 112,
+   "repro": 112,
+   "flagged": 112,
+   "benign": 16,
+   "benign_flagged": 0
+  }
+ },
+ "catch_rate_over_629": 0.9889,
+ "catch_rate_over_reproducible": 0.9936,
+ "catch_rate_strict_arg_taint_only": 0.9808,
+ "benign_fpr": 0.0,
+ "case_universe": {
+  "base_user_tasks": 86,
+  "attacks": [
+   "direct",
+   "ignore_previous",
+   "system_message",
+   "injecagent",
+   "important_instructions",
+   "important_instructions_no_user_name",
+   "important_instructions_no_model_name"
+  ],
+  "injection_utility_cases": 27,
+  "expected_total": 629
+ }
+}

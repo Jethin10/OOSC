@@ -1,0 +1,279 @@
+{
+ "retail": {
+  "tasks": 114,
+  "generated_strict_signatures": 8397400,
+  "strict_hits": 12,
+  "writes_only_hits": 53,
+  "strict_rate": 0.1053,
+  "writes_only_rate": 0.4649,
+  "misses_sample": [
+   {
+    "task": "1",
+    "writes_hit": true,
+    "n_actions": 5
+   },
+   {
+    "task": "2",
+    "writes_hit": false,
+    "n_actions": 11
+   },
+   {
+    "task": "3",
+    "writes_hit": true,
+    "n_actions": 12
+   },
+   {
+    "task": "4",
+    "writes_hit": false,
+    "n_actions": 13
+   },
+   {
+    "task": "5",
+    "writes_hit": true,
+    "n_actions": 5
+   },
+   {
+    "task": "10",
+    "writes_hit": false,
+    "n_actions": 5
+   },
+   {
+    "task": "11",
+    "writes_hit": false,
+    "n_actions": 6
+   },
+   {
+    "task": "12",
+    "writes_hit": false,
+    "n_actions": 5
+   },
+   {
+    "task": "13",
+    "writes_hit": true,
+    "n_actions": 5
+   },
+   {
+    "task": "14",
+    "writes_hit": false,
+    "n_actions": 6
+   },
+   {
+    "task": "15",
+    "writes_hit": true,
+    "n_actions": 7
+   },
+   {
+    "task": "16",
+    "writes_hit": false,
+    "n_actions": 9
+   },
+   {
+    "task": "17",
+    "writes_hit": true,
+    "n_actions": 6
+   },
+   {
+    "task": "19",
+    "writes_hit": true,
+    "n_actions": 7
+   },
+   {
+    "task": "20",
+    "writes_hit": false,
+    "n_actions": 10
+   },
+   {
+    "task": "21",
+    "writes_hit": false,
+    "n_actions": 12
+   },
+   {
+    "task": "22",
+    "writes_hit": false,
+    "n_actions": 7
+   },
+   {
+    "task": "23",
+    "writes_hit": false,
+    "n_actions": 12
+   },
+   {
+    "task": "25",
+    "writes_hit": false,
+    "n_actions": 6
+   },
+   {
+    "task": "26",
+    "writes_hit": true,
+    "n_actions": 8
+   },
+   {
+    "task": "27",
+    "writes_hit": true,
+    "n_actions": 6
+   },
+   {
+    "task": "28",
+    "writes_hit": false,
+    "n_actions": 11
+   },
+   {
+    "task": "29",
+    "writes_hit": false,
+    "n_actions": 6
+   },
+   {
+    "task": "30",
+    "writes_hit": false,
+    "n_actions": 13
+   },
+   {
+    "task": "31",
+    "writes_hit": false,
+    "n_actions": 12
+   }
+  ]
+ },
+ "airline": {
+  "tasks": 50,
+  "generated_strict_signatures": 156845,
+  "strict_hits": 3,
+  "writes_only_hits": 9,
+  "strict_rate": 0.06,
+  "writes_only_rate": 0.18,
+  "misses_sample": [
+   {
+    "task": "1",
+    "writes_hit": false,
+    "n_actions": 2
+   },
+   {
+    "task": "2",
+    "writes_hit": false,
+    "n_actions": 3
+   },
+   {
+    "task": "3",
+    "writes_hit": false,
+    "n_actions": 2
+   },
+   {
+    "task": "4",
+    "writes_hit": false,
+    "n_actions": 6
+   },
+   {
+    "task": "6",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "7",
+    "writes_hit": false,
+    "n_actions": 5
+   },
+   {
+    "task": "8",
+    "writes_hit": true,
+    "n_actions": 4
+   },
+   {
+    "task": "9",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "11",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "12",
+    "writes_hit": false,
+    "n_actions": 5
+   },
+   {
+    "task": "13",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "14",
+    "writes_hit": true,
+    "n_actions": 2
+   },
+   {
+    "task": "15",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "16",
+    "writes_hit": false,
+    "n_actions": 1
+   },
+   {
+    "task": "17",
+    "writes_hit": false,
+    "n_actions": 3
+   },
+   {
+    "task": "18",
+    "writes_hit": false,
+    "n_actions": 5
+   },
+   {
+    "task": "19",
+    "writes_hit": true,
+    "n_actions": 1
+   },
+   {
+    "task": "20",
+    "writes_hit": true,
+    "n_actions": 1
+   },
+   {
+    "task": "21",
+    "writes_hit": false,
+    "n_actions": 2
+   },
+   {
+    "task": "22",
+    "writes_hit": false,
+    "n_actions": 3
+   },
+   {
+    "task": "23",
+    "writes_hit": false,
+    "n_actions": 4
+   },
+   {
+    "task": "24",
+    "writes_hit": true,
+    "n_actions": 1
+   },
+   {
+    "task": "25",
+    "writes_hit": true,
+    "n_actions": 1
+   },
+   {
+    "task": "29",
+    "writes_hit": true,
+    "n_actions": 3
+   },
+   {
+    "task": "30",
+    "writes_hit": false,
+    "n_actions": 3
+   }
+  ]
+ },
+ "_overall": {
+  "tasks": 164,
+  "strict": "15/164",
+  "strict_rate": 0.0915,
+  "writes_only": "62/164",
+  "writes_only_rate": 0.378
+ }
+}

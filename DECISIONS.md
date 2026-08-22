@@ -75,3 +75,14 @@ bindings, free-text ignored) reported alongside with the 73.8% derivability
 ceiling stated. Matching granularity fixed before any generation ran.
 Communicate-info criteria excluded from both sides symmetrically (text-phrasing,
 not tool behavior).
+
+## D10 - agentdojo case universe pinned to v0.1.2, base tasks only
+
+The 629 figure = 86 base user tasks x 7 attack variants + 27 injection-task
+utility cases. The repo grew after the paper (97 runtime tasks at v0.1.2 due to
+combinator-generated compound tasks). We pin vendor/agentdojo-paper to tag
+v0.1.2 and exclude the 11 combinator-derived compound tasks (derivatives of
+base tasks), restoring exactly 86. Attack matrix (template-based, offline,
+no attacker LLM): direct, ignore_previous, system_message, injecagent,
+important_instructions, important_instructions_no_user_name,
+important_instructions_no_model_name. Frozen.
