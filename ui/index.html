@@ -1,0 +1,7407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOSC — Agent Reliability</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="mark" aria-hidden="true"></div>
+  <h1>OOSC</h1><span class="sub">Agent Reliability</span>
+  <span class="spacer"></span>
+  <span class="pill" id="replay">replay verified</span>
+  <span class="pill" id="generated"></span>
+</header>
+<main>
+  <aside>
+    <div class="label">Overall reliability</div>
+    <div class="big"><span id="overall-rate">—</span></div>
+    <div class="label" id="overall-runs"></div>
+    <div class="ci-bar"><i id="overall-ci"></i></div>
+    <div class="label">By task category</div>
+    <div class="cat-list" id="cats"></div>
+    <div class="legend">
+      <div class="label">Failure modes</div>
+      <div id="legend"></div>
+    </div>
+  </aside>
+  <section>
+    <div class="toolbar">
+      <input type="search" id="filter" placeholder="Filter runs…" spellcheck="false">
+      <span class="kbd">/</span>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <span style="flex:1"></span>
+      <span class="pill" id="count"></span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Scenario</th><th>Category</th><th>Outcome</th><th>Failure modes</th>
+        <th class="hide-m">Calls</th><th class="hide-m">Mutations</th>
+      </tr></thead>
+      <tbody id="runs-body"></tbody>
+    </table>
+  </section>
+</main>
+<footer>
+  <span><span class="kbd">j</span> / <span class="kbd">k</span> navigate</span>
+  <span><span class="kbd">/</span> filter</span>
+  <span><span class="kbd">enter</span> details · <span class="kbd">esc</span> close</span>
+</footer>
+<div id="drawer-root">
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="drawer" role="dialog" aria-label="Run details">
+    <h2 id="d-title"></h2>
+    <div class="meta" id="d-meta"></div>
+    <dl class="kv" id="d-kv"></dl>
+    <p class="meta">Every run above is backed by a replayable trace: re-running the
+    recorded calls against a fresh derived world reproduces the exact state
+    fingerprint history.</p>
+  </aside>
+</div>
+<script>window.__SCORECARD__ = {
+ "generated_at": "2026-08-22T23:14:19.496323+00:00",
+ "domain": "retail",
+ "suite_size": 150,
+ "replay_failures": 0,
+ "scorecards": {
+  "clean-agent": {
+   "agent_version": "clean-agent",
+   "generated_at": "2026-08-22T23:14:19.496323+00:00",
+   "overall": {
+    "runs": 150,
+    "successes": 150,
+    "reliability": 1.0,
+    "ci95": [
+     0.975,
+     1.0
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 2,
+     "successes": 2,
+     "reliability": 1.0,
+     "ci95": [
+      0.3424,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 69,
+     "successes": 69,
+     "reliability": 1.0,
+     "ci95": [
+      0.9473,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 70,
+     "successes": 70,
+     "reliability": 1.0,
+     "ci95": [
+      0.948,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "runs": 1,
+     "successes": 1,
+     "reliability": 1.0,
+     "ci95": [
+      0.2065,
+      1.0
+     ],
+     "failures_by_kind": {}
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 8,
+     "successes": 8,
+     "reliability": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ],
+     "failures_by_kind": {}
+    }
+   ]
+  },
+  "loopy-agent": {
+   "agent_version": "loopy-agent",
+   "generated_at": "2026-08-22T23:15:22.128179+00:00",
+   "overall": {
+    "runs": 150,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.025
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 2,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.6576
+     ],
+     "failures_by_kind": {
+      "tool_loop": 2
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 69,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.0527
+     ],
+     "failures_by_kind": {
+      "tool_loop": 69
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 70,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.052
+     ],
+     "failures_by_kind": {
+      "tool_loop": 70
+     }
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "tool_loop": 1
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 8,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3244
+     ],
+     "failures_by_kind": {
+      "tool_loop": 8
+     }
+    }
+   ]
+  },
+  "overconfident-agent": {
+   "agent_version": "overconfident-agent",
+   "generated_at": "2026-08-22T23:17:01.736387+00:00",
+   "overall": {
+    "runs": 150,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.025
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 2,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.6576
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 2
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 69,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.0527
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 69
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 70,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.052
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 70
+     }
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 1
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 8,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3244
+     ],
+     "failures_by_kind": {
+      "hallucinated_confidence": 8
+     }
+    }
+   ]
+  },
+  "reckless-agent": {
+   "agent_version": "reckless-agent",
+   "generated_at": "2026-08-22T23:17:54.331936+00:00",
+   "overall": {
+    "runs": 150,
+    "successes": 0,
+    "reliability": 0.0,
+    "ci95": [
+     0.0,
+     0.025
+    ]
+   },
+   "categories": [
+    {
+     "category": "cancel_pending_order",
+     "runs": 2,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.6576
+     ],
+     "failures_by_kind": {
+      "goal_drift": 2
+     }
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "runs": 69,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.0527
+     ],
+     "failures_by_kind": {
+      "goal_drift": 69
+     }
+    },
+    {
+     "category": "modify_pending_order_items",
+     "runs": 70,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.052
+     ],
+     "failures_by_kind": {
+      "goal_drift": 70
+     }
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "runs": 1,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.7935
+     ],
+     "failures_by_kind": {
+      "goal_drift": 1
+     }
+    },
+    {
+     "category": "return_delivered_order_items",
+     "runs": 8,
+     "successes": 0,
+     "reliability": 0.0,
+     "ci95": [
+      0.0,
+      0.3244
+     ],
+     "failures_by_kind": {
+      "goal_drift": 8
+     }
+    }
+   ]
+  }
+ },
+ "regressions_vs_clean": {
+  "loopy-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  },
+  "overconfident-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  },
+  "reckless-agent": {
+   "regressions": [
+    {
+     "category": "cancel_pending_order",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "exchange_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    },
+    {
+     "category": "modify_pending_order_payment",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": false
+    },
+    {
+     "category": "return_delivered_order_items",
+     "base": 1.0,
+     "candidate": 0.0,
+     "delta": -1.0,
+     "significant_regression": true
+    }
+   ],
+   "gate_pass": false
+  }
+ },
+ "runs": [
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-000001",
+   "category": "cancel_pending_order",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-000334",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-000667",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-001000",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-001333",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-001666",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-001999",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-002332",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-002665",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-002998",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-003331",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-003664",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-003997",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-004330",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-004663",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-004996",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-005329",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-005662",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-005995",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-006328",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-006661",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-006994",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-007327",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-007660",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-007993",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-008326",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-008659",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-008992",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-009325",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-009658",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-009991",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-010324",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-010657",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-010990",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-011323",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-011656",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-011989",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-012322",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-012655",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-012988",
+   "category": "modify_pending_order_payment",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-013321",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-013654",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-013987",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-014320",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-014653",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-014986",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-015319",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-015652",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-015985",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-016318",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-016651",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-016984",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-017317",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-017650",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-017983",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-018316",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-018649",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-018982",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-019315",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-019648",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-019981",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-020314",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-020647",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-020980",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-021313",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-021646",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-021979",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-022312",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-022645",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-022978",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-023311",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-023644",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-023977",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-024310",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-024643",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-024976",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-025309",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-025642",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-025975",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-026308",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-026641",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-026974",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-027307",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-027640",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-027973",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-028306",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-028639",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-028972",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-029305",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-029638",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-029971",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-030304",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-030637",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-030970",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-031303",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-031636",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-031969",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-032302",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-032635",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-032968",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-033301",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-033634",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-033967",
+   "category": "cancel_pending_order",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 8
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-034300",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-034633",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-034966",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-035299",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-035632",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-035965",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-036298",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-036631",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-036964",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-037297",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-037630",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-037963",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-038296",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-038629",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-038962",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-039295",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-039628",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-039961",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-040294",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-040627",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-040960",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-041293",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-041626",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-041959",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-042292",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-042625",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-042958",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-043291",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-043624",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-043957",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-044290",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-044623",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-044956",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-045289",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-045622",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-045955",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-046288",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-046621",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-046954",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-047287",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-047620",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-047953",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-048286",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-048619",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-048952",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 6
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-049285",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 5
+  },
+  {
+   "agent": "clean-agent",
+   "scenario": "retail-gen-049618",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": true,
+   "failures": [],
+   "mutations": 1,
+   "calls": 3
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-000001",
+   "category": "cancel_pending_order",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 1,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-000334",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-000667",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-001000",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-001333",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-001666",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-001999",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-002332",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-002665",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-002998",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-003331",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-003664",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-003997",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-004330",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-004663",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-004996",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-005329",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-005662",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-005995",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-006328",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-006661",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-006994",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-007327",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-007660",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-007993",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-008326",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-008659",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-008992",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-009325",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 0,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-009658",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-009991",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-010324",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-010657",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-010990",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-011323",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-011656",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-011989",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-012322",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-012655",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-012988",
+   "category": "modify_pending_order_payment",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-013321",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-013654",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-013987",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-014320",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-014653",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-014986",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-015319",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-015652",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-015985",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-016318",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-016651",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-016984",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-017317",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-017650",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-017983",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-018316",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-018649",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-018982",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-019315",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-019648",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-019981",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-020314",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-020647",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-020980",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-021313",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-021646",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-021979",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-022312",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-022645",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-022978",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-023311",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-023644",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-023977",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-024310",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-024643",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-024976",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-025309",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-025642",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-025975",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-026308",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-026641",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-026974",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-027307",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-027640",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-027973",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-028306",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-028639",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-028972",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-029305",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-029638",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-029971",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-030304",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-030637",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-030970",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-031303",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-031636",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-031969",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-032302",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-032635",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-032968",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-033301",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-033634",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-033967",
+   "category": "cancel_pending_order",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 1,
+   "calls": 24
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-034300",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-034633",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-034966",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-035299",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-035632",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-035965",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-036298",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-036631",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-036964",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-037297",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-037630",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-037963",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-038296",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-038629",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-038962",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-039295",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-039628",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-039961",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-040294",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-040627",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-040960",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-041293",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-041626",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-041959",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-042292",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-042625",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-042958",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-043291",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-043624",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-043957",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-044290",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-044623",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-044956",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-045289",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-045622",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-045955",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-046288",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-046621",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-046954",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 12
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-047287",
+   "category": "modify_pending_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-047620",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-047953",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-048286",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-048619",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-048952",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 18
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-049285",
+   "category": "return_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 15
+  },
+  {
+   "agent": "loopy-agent",
+   "scenario": "retail-gen-049618",
+   "category": "exchange_delivered_order_items",
+   "reward": 1.0,
+   "success": false,
+   "failures": [
+    "tool_loop"
+   ],
+   "mutations": 3,
+   "calls": 9
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-000001",
+   "category": "cancel_pending_order",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-000334",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-000667",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-001000",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-001333",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-001666",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-001999",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-002332",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-002665",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-002998",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-003331",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-003664",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-003997",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-004330",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-004663",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-004996",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-005329",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-005662",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-005995",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-006328",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-006661",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-006994",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-007327",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-007660",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-007993",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-008326",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-008659",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-008992",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-009325",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-009658",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-009991",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-010324",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-010657",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-010990",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-011323",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-011656",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-011989",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-012322",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-012655",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-012988",
+   "category": "modify_pending_order_payment",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-013321",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-013654",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-013987",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-014320",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-014653",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-014986",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-015319",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-015652",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-015985",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-016318",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-016651",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-016984",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-017317",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-017650",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-017983",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-018316",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-018649",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-018982",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-019315",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-019648",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-019981",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-020314",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-020647",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-020980",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-021313",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-021646",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-021979",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-022312",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-022645",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-022978",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-023311",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-023644",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-023977",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-024310",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-024643",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-024976",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-025309",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-025642",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-025975",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-026308",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-026641",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-026974",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-027307",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-027640",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-027973",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-028306",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-028639",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-028972",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-029305",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-029638",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-029971",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-030304",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-030637",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-030970",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-031303",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-031636",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-031969",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-032302",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-032635",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-032968",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-033301",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-033634",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-033967",
+   "category": "cancel_pending_order",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 8
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-034300",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-034633",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-034966",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-035299",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-035632",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-035965",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-036298",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-036631",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-036964",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-037297",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-037630",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-037963",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-038296",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-038629",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-038962",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-039295",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-039628",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-039961",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-040294",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-040627",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-040960",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-041293",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-041626",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-041959",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-042292",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-042625",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-042958",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-043291",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-043624",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-043957",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-044290",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-044623",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-044956",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-045289",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-045622",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-045955",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-046288",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-046621",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-046954",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 4
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-047287",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-047620",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-047953",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-048286",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-048619",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-048952",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 6
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-049285",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 5
+  },
+  {
+   "agent": "overconfident-agent",
+   "scenario": "retail-gen-049618",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "hallucinated_confidence"
+   ],
+   "mutations": 0,
+   "calls": 3
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-000001",
+   "category": "cancel_pending_order",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-000334",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-000667",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-001000",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-001333",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-001666",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-001999",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-002332",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-002665",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-002998",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-003331",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-003664",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-003997",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-004330",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-004663",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-004996",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-005329",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-005662",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-005995",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-006328",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-006661",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-006994",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-007327",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-007660",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-007993",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-008326",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-008659",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-008992",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-009325",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 1,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-009658",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-009991",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-010324",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-010657",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-010990",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-011323",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-011656",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-011989",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-012322",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-012655",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-012988",
+   "category": "modify_pending_order_payment",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-013321",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-013654",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-013987",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-014320",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-014653",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-014986",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-015319",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-015652",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-015985",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-016318",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-016651",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-016984",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-017317",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-017650",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-017983",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-018316",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-018649",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-018982",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-019315",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-019648",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-019981",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-020314",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-020647",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-020980",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-021313",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-021646",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-021979",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-022312",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-022645",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-022978",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-023311",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-023644",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-023977",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-024310",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-024643",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-024976",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-025309",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-025642",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-025975",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-026308",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-026641",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-026974",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-027307",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-027640",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-027973",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-028306",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-028639",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-028972",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-029305",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-029638",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-029971",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-030304",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-030637",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-030970",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-031303",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-031636",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-031969",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-032302",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-032635",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-032968",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-033301",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-033634",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-033967",
+   "category": "cancel_pending_order",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 9
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-034300",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-034633",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-034966",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-035299",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-035632",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-035965",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-036298",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-036631",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-036964",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-037297",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-037630",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-037963",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-038296",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-038629",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-038962",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-039295",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-039628",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-039961",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-040294",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-040627",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-040960",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-041293",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-041626",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-041959",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-042292",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-042625",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-042958",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-043291",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-043624",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-043957",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-044290",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-044623",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-044956",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-045289",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-045622",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-045955",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-046288",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-046621",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-046954",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 5
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-047287",
+   "category": "modify_pending_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-047620",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-047953",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-048286",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-048619",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-048952",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 7
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-049285",
+   "category": "return_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 6
+  },
+  {
+   "agent": "reckless-agent",
+   "scenario": "retail-gen-049618",
+   "category": "exchange_delivered_order_items",
+   "reward": 0.0,
+   "success": false,
+   "failures": [
+    "goal_drift"
+   ],
+   "mutations": 2,
+   "calls": 4
+  }
+ ]
+};</script>
+<script src="app.js"></script>
+</body>
+</html>

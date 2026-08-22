@@ -1,0 +1,27 @@
+{
+  "name": "oosc",
+  "version": "1.0.0",
+  "description": "Continuous integration for autonomous AI agents. Given an agent's tool schemas, system prompt, and task domain, the engine:",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jethin10/OOSC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jethin10/OOSC/issues"
+  },
+  "homepage": "https://github.com/Jethin10/OOSC#readme",
+  "dependencies": {
+    "puppeteer-core": "^25.8.0"
+  }
+}
