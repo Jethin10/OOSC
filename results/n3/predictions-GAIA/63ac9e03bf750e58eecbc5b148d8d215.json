@@ -1,0 +1,104 @@
+{
+ "errors": [
+  {
+   "location": "4dff5907384123d2",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "4dff5907384123d2",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "4dff5907384123d2",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "3e833360fcbcd69b",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "3e833360fcbcd69b",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "3e833360fcbcd69b",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "5367c67eb914f054",
+   "category": "Language-only"
+  },
+  {
+   "location": "5367c67eb914f054",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5367c67eb914f054",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "ec144ce0aafd0221",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "ec144ce0aafd0221",
+   "category": "Language-only"
+  },
+  {
+   "location": "ec144ce0aafd0221",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "e0a98eb5373299be",
+   "category": "Authentication Errors"
+  },
+  {
+   "location": "91e614c2942824bf",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "91e614c2942824bf",
+   "category": "Language-only"
+  },
+  {
+   "location": "91e614c2942824bf",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "d46d6171dd60a5b0",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "d46d6171dd60a5b0",
+   "category": "Language-only"
+  },
+  {
+   "location": "d46d6171dd60a5b0",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "51fdbebf91816577",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "51fdbebf91816577",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "51fdbebf91816577",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "3b4d2bdbc59f9cd8",
+   "category": "Language-only"
+  },
+  {
+   "location": "3b4d2bdbc59f9cd8",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "3b4d2bdbc59f9cd8",
+   "category": "Formatting Errors"
+  }
+ ]
+}

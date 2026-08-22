@@ -1,0 +1,132 @@
+{
+ "errors": [
+  {
+   "location": "b6e8585d2eabe95d",
+   "category": "Resource Exhaustion"
+  },
+  {
+   "location": "64477d4c7dda2751",
+   "category": "Resource Exhaustion"
+  },
+  {
+   "location": "f73bc1a1b1758f24",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "f73bc1a1b1758f24",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "f73bc1a1b1758f24",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "62213410ad1eb0bf",
+   "category": "Resource Exhaustion"
+  },
+  {
+   "location": "62213410ad1eb0bf",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "62213410ad1eb0bf",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "578fe5bb72b65035",
+   "category": "Language-only"
+  },
+  {
+   "location": "578fe5bb72b65035",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "578fe5bb72b65035",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "d116751012ac186d",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "d116751012ac186d",
+   "category": "Language-only"
+  },
+  {
+   "location": "d116751012ac186d",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "ff7c89699db3acd7",
+   "category": "Tool-related"
+  },
+  {
+   "location": "ff7c89699db3acd7",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "ff7c89699db3acd7",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "c60505371bc5058d",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "c60505371bc5058d",
+   "category": "Language-only"
+  },
+  {
+   "location": "c60505371bc5058d",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "7e847f033df5c13c",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "7e847f033df5c13c",
+   "category": "Language-only"
+  },
+  {
+   "location": "7e847f033df5c13c",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a6a3c65d52ffb7e4",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "a6a3c65d52ffb7e4",
+   "category": "Language-only"
+  },
+  {
+   "location": "a6a3c65d52ffb7e4",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "c44f6121d97b2667",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "c44f6121d97b2667",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "c44f6121d97b2667",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "3ce64212a3cd0a30",
+   "category": "Resource Exhaustion"
+  },
+  {
+   "location": "3ce64212a3cd0a30",
+   "category": "Language-only"
+  },
+  {
+   "location": "3ce64212a3cd0a30",
+   "category": "Instruction Non-compliance"
+  }
+ ]
+}

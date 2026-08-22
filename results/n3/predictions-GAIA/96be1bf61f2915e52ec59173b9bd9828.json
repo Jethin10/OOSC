@@ -1,0 +1,88 @@
+{
+ "errors": [
+  {
+   "location": "155debe3aafa6f52",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "155debe3aafa6f52",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "155debe3aafa6f52",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "60f4839c67e71f03",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "60f4839c67e71f03",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "60f4839c67e71f03",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "409117693b0aa838",
+   "category": "Language-only"
+  },
+  {
+   "location": "409117693b0aa838",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "409117693b0aa838",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "663466a8f53b9973",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "663466a8f53b9973",
+   "category": "Language-only"
+  },
+  {
+   "location": "663466a8f53b9973",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "4d143befe9806d8b",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "4d143befe9806d8b",
+   "category": "Language-only"
+  },
+  {
+   "location": "4d143befe9806d8b",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "eb62db9603f9e2cf",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "eb62db9603f9e2cf",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "eb62db9603f9e2cf",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "d30e7bf69277d916",
+   "category": "Language-only"
+  },
+  {
+   "location": "d30e7bf69277d916",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "d30e7bf69277d916",
+   "category": "Formatting Errors"
+  }
+ ]
+}

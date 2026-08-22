@@ -1,0 +1,100 @@
+{
+ "errors": [
+  {
+   "location": "bd265cbc926365af",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "bd265cbc926365af",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "bd265cbc926365af",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "428275ba7012f9c6",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "428275ba7012f9c6",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "428275ba7012f9c6",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "166a89c01e3e1be8",
+   "category": "Language-only"
+  },
+  {
+   "location": "166a89c01e3e1be8",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "166a89c01e3e1be8",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "6b316e27c6105867",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "6b316e27c6105867",
+   "category": "Language-only"
+  },
+  {
+   "location": "6b316e27c6105867",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8bfae3250ddb8ab6",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "8bfae3250ddb8ab6",
+   "category": "Language-only"
+  },
+  {
+   "location": "8bfae3250ddb8ab6",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "4ff1d3737863c4a0",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "4ff1d3737863c4a0",
+   "category": "Language-only"
+  },
+  {
+   "location": "4ff1d3737863c4a0",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "e4c2046e3a1320ac",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "e4c2046e3a1320ac",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "e4c2046e3a1320ac",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "21b2866bb4428c58",
+   "category": "Language-only"
+  },
+  {
+   "location": "21b2866bb4428c58",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "21b2866bb4428c58",
+   "category": "Formatting Errors"
+  }
+ ]
+}

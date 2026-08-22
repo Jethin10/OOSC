@@ -1,0 +1,380 @@
+{
+ "errors": [
+  {
+   "location": "b6f5d35d4da55706",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "b6f5d35d4da55706",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "b6f5d35d4da55706",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "276a4d2b8c723029",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "276a4d2b8c723029",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "276a4d2b8c723029",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "f2b3d69ba08f2b25",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "f2564378f27303af",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "f2564378f27303af",
+   "category": "Language-only"
+  },
+  {
+   "location": "f2564378f27303af",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "0c80634c9abb5c36",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "a0d6e33f3d7d6cac",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "a0d6e33f3d7d6cac",
+   "category": "Language-only"
+  },
+  {
+   "location": "a0d6e33f3d7d6cac",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8b57e0136100aab8",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "34c4555867a1ca7c",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "34c4555867a1ca7c",
+   "category": "Language-only"
+  },
+  {
+   "location": "34c4555867a1ca7c",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "f373528b1a1c1677",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "1cea48866cf9e041",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "1cea48866cf9e041",
+   "category": "Language-only"
+  },
+  {
+   "location": "1cea48866cf9e041",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "deb185e30531c6d6",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "deb185e30531c6d6",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "8a3fd7de73f63a01",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "8a3fd7de73f63a01",
+   "category": "Language-only"
+  },
+  {
+   "location": "8a3fd7de73f63a01",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "275b3650da34e626",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "0d1802a2d305fa85",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "0d1802a2d305fa85",
+   "category": "Language-only"
+  },
+  {
+   "location": "0d1802a2d305fa85",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "65c1b4200c921a50",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "307573a493643d07",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "307573a493643d07",
+   "category": "Language-only"
+  },
+  {
+   "location": "307573a493643d07",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "262bc5bed955708d",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "dd967d970d8a6ef8",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "dd967d970d8a6ef8",
+   "category": "Language-only"
+  },
+  {
+   "location": "dd967d970d8a6ef8",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "938c3558033bf53c",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "938c3558033bf53c",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "7c7611f286aa93ad",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "7c7611f286aa93ad",
+   "category": "Language-only"
+  },
+  {
+   "location": "7c7611f286aa93ad",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "dd871d51519fa247",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "38d2eee52967ac77",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "38d2eee52967ac77",
+   "category": "Language-only"
+  },
+  {
+   "location": "38d2eee52967ac77",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "f8d2ee72adf3c14a",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "414a4488a52f9fde",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "414a4488a52f9fde",
+   "category": "Language-only"
+  },
+  {
+   "location": "414a4488a52f9fde",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "382e2b539d7faa08",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "382e2b539d7faa08",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "c6ad6b62e889ca91",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "c6ad6b62e889ca91",
+   "category": "Language-only"
+  },
+  {
+   "location": "c6ad6b62e889ca91",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "cb4c4d09369c7c86",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "af7e12368aa79d71",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "af7e12368aa79d71",
+   "category": "Language-only"
+  },
+  {
+   "location": "af7e12368aa79d71",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "509c17baf6f78a73",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "2c52c3e3c7cb22a8",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "2c52c3e3c7cb22a8",
+   "category": "Language-only"
+  },
+  {
+   "location": "2c52c3e3c7cb22a8",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5b9806905968317d",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "2aaff112d8dc3539",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "2aaff112d8dc3539",
+   "category": "Language-only"
+  },
+  {
+   "location": "2aaff112d8dc3539",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "62b141741a6d45af",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "2572893e2c11cc29",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "2572893e2c11cc29",
+   "category": "Language-only"
+  },
+  {
+   "location": "2572893e2c11cc29",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "1e0bf482ab2a8b0a",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "95cff1042d35dbd2",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "95cff1042d35dbd2",
+   "category": "Language-only"
+  },
+  {
+   "location": "95cff1042d35dbd2",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5cc0e07479cd17fb",
+   "category": "Tool-related"
+  },
+  {
+   "location": "5cc0e07479cd17fb",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "5cc0e07479cd17fb",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "c63aea0154169b67",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "c63aea0154169b67",
+   "category": "Language-only"
+  },
+  {
+   "location": "c63aea0154169b67",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "826a1446c6816874",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "2d43712ca10d5395",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "2d43712ca10d5395",
+   "category": "Language-only"
+  },
+  {
+   "location": "2d43712ca10d5395",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "fe05b180bb0960c0",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "9429dc886dd21dfe",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "9429dc886dd21dfe",
+   "category": "Language-only"
+  },
+  {
+   "location": "9429dc886dd21dfe",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "fd0b20bb26b19abd",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "fd0b20bb26b19abd",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "fd0b20bb26b19abd",
+   "category": "Task Orchestration"
+  }
+ ]
+}

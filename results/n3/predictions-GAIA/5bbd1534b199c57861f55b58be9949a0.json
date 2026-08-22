@@ -1,0 +1,644 @@
+{
+ "errors": [
+  {
+   "location": "ad58d8c991f54979",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "ad58d8c991f54979",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "ad58d8c991f54979",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "00d5c2c04e4b78d3",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "00d5c2c04e4b78d3",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "00d5c2c04e4b78d3",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "891e6a67740b4ca7",
+   "category": "Language-only"
+  },
+  {
+   "location": "891e6a67740b4ca7",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "891e6a67740b4ca7",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "4b6ca26e22b7a2ca",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "4b6ca26e22b7a2ca",
+   "category": "Language-only"
+  },
+  {
+   "location": "4b6ca26e22b7a2ca",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "e14687c1b0c6dbac",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "4835efde19d25e46",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "4835efde19d25e46",
+   "category": "Language-only"
+  },
+  {
+   "location": "4835efde19d25e46",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a7ec49fd21ecc6ef",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "a7ec49fd21ecc6ef",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "a7ec49fd21ecc6ef",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "5fea5e6e395a3c09",
+   "category": "Language-only"
+  },
+  {
+   "location": "5fea5e6e395a3c09",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5fea5e6e395a3c09",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "46f3eda37512cb9e",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "46f3eda37512cb9e",
+   "category": "Language-only"
+  },
+  {
+   "location": "46f3eda37512cb9e",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "f9665b5ea53b84c5",
+   "category": "Language-only"
+  },
+  {
+   "location": "f9665b5ea53b84c5",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "f9665b5ea53b84c5",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "bcc24d5f56bb111f",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "bcc24d5f56bb111f",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "bcc24d5f56bb111f",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "38e6b8c2d015f306",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "91d06e092980b3e3",
+   "category": "Language-only"
+  },
+  {
+   "location": "91d06e092980b3e3",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "91d06e092980b3e3",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "cfa607f664eb54a1",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "cfa607f664eb54a1",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "cfa607f664eb54a1",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "e43ddc6a999ba559",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "4c6392d8bb213768",
+   "category": "Language-only"
+  },
+  {
+   "location": "4c6392d8bb213768",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "4c6392d8bb213768",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "8d775f54debe54fb",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "8d775f54debe54fb",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "8d775f54debe54fb",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "cd2a8349b09fae51",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "adac0128d9c01424",
+   "category": "Language-only"
+  },
+  {
+   "location": "adac0128d9c01424",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "adac0128d9c01424",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "9134e17a8b51075c",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "9134e17a8b51075c",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "9134e17a8b51075c",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "de175ea3c0e29577",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "de175ea3c0e29577",
+   "category": "Language-only"
+  },
+  {
+   "location": "de175ea3c0e29577",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8966090eb2da383a",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "8966090eb2da383a",
+   "category": "Language-only"
+  },
+  {
+   "location": "8966090eb2da383a",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "639469c227f67373",
+   "category": "Language-only"
+  },
+  {
+   "location": "639469c227f67373",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "639469c227f67373",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "b2d7e83d2d701dcd",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "b2d7e83d2d701dcd",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "b2d7e83d2d701dcd",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "d393edcef12d5b91",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "0004d310b35bb4d2",
+   "category": "Language-only"
+  },
+  {
+   "location": "0004d310b35bb4d2",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "0004d310b35bb4d2",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "6b4d8566786544d4",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "6b4d8566786544d4",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "6b4d8566786544d4",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "6e931d98ba9148e0",
+   "category": "Tool-related"
+  },
+  {
+   "location": "6e931d98ba9148e0",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "6e931d98ba9148e0",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "8b7d274e300e7a78",
+   "category": "Language-only"
+  },
+  {
+   "location": "8b7d274e300e7a78",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8b7d274e300e7a78",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "4297722fef03d37b",
+   "category": "Tool-related"
+  },
+  {
+   "location": "4297722fef03d37b",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "4297722fef03d37b",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "bfca26b268fb398c",
+   "category": "Tool-related"
+  },
+  {
+   "location": "bfca26b268fb398c",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "bfca26b268fb398c",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "91c5d8af05a6a6be",
+   "category": "Language-only"
+  },
+  {
+   "location": "91c5d8af05a6a6be",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "91c5d8af05a6a6be",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "911d973137e98a0b",
+   "category": "Tool-related"
+  },
+  {
+   "location": "911d973137e98a0b",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "911d973137e98a0b",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "120f13b5e07a0875",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "120f13b5e07a0875",
+   "category": "Language-only"
+  },
+  {
+   "location": "120f13b5e07a0875",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "d7dfa98b34cad2a2",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "d7dfa98b34cad2a2",
+   "category": "Language-only"
+  },
+  {
+   "location": "d7dfa98b34cad2a2",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a6cd08659f42a663",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "f4d49ad9f863ae15",
+   "category": "Language-only"
+  },
+  {
+   "location": "f4d49ad9f863ae15",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "f4d49ad9f863ae15",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "dfccca4b99ca9af5",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "dfccca4b99ca9af5",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "dfccca4b99ca9af5",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "46405189e8296b7f",
+   "category": "Tool-related"
+  },
+  {
+   "location": "46405189e8296b7f",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "46405189e8296b7f",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "e9a6f46b59bf89d7",
+   "category": "Language-only"
+  },
+  {
+   "location": "e9a6f46b59bf89d7",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "e9a6f46b59bf89d7",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "1fdfbdfde70ed3c4",
+   "category": "Tool-related"
+  },
+  {
+   "location": "1fdfbdfde70ed3c4",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "1fdfbdfde70ed3c4",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "1ccb009c82c99bf2",
+   "category": "Tool-related"
+  },
+  {
+   "location": "1ccb009c82c99bf2",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "1ccb009c82c99bf2",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "de0d733b0b82ec14",
+   "category": "Language-only"
+  },
+  {
+   "location": "de0d733b0b82ec14",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "de0d733b0b82ec14",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "41c4c4642ef36107",
+   "category": "Tool-related"
+  },
+  {
+   "location": "41c4c4642ef36107",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "41c4c4642ef36107",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "20cca36c8abca279",
+   "category": "Tool-related"
+  },
+  {
+   "location": "20cca36c8abca279",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "20cca36c8abca279",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "5585f5a208688f45",
+   "category": "Language-only"
+  },
+  {
+   "location": "5585f5a208688f45",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5585f5a208688f45",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "3b1b927afcfdd9b7",
+   "category": "Tool-related"
+  },
+  {
+   "location": "3b1b927afcfdd9b7",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "3b1b927afcfdd9b7",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "908b5672ba0cf38b",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "908b5672ba0cf38b",
+   "category": "Language-only"
+  },
+  {
+   "location": "908b5672ba0cf38b",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "abf6da793852457e",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "abf6da793852457e",
+   "category": "Language-only"
+  },
+  {
+   "location": "abf6da793852457e",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a631d9536fffccdf",
+   "category": "Language-only"
+  },
+  {
+   "location": "a631d9536fffccdf",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a631d9536fffccdf",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "68d9d60620576431",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "68d9d60620576431",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "68d9d60620576431",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "fe078e0669c82f9e",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "284e6e9cf69d253c",
+   "category": "Language-only"
+  },
+  {
+   "location": "284e6e9cf69d253c",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "284e6e9cf69d253c",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "963441fcf69f6f66",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "963441fcf69f6f66",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "963441fcf69f6f66",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "b3bb7b98c8cd29ff",
+   "category": "Language-only"
+  },
+  {
+   "location": "b3bb7b98c8cd29ff",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "b3bb7b98c8cd29ff",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "56cd5fa0eb196809",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "56cd5fa0eb196809",
+   "category": "Language-only"
+  },
+  {
+   "location": "56cd5fa0eb196809",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "44bfd407a3c52089",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "44bfd407a3c52089",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "44bfd407a3c52089",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "164913b19b095138",
+   "category": "Language-only"
+  },
+  {
+   "location": "164913b19b095138",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "164913b19b095138",
+   "category": "Formatting Errors"
+  }
+ ]
+}

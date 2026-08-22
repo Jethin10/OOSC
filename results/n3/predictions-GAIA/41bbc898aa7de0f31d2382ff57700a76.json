@@ -1,0 +1,196 @@
+{
+ "errors": [
+  {
+   "location": "3300d9991ea715af",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "3300d9991ea715af",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "3300d9991ea715af",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "5e4309f04577d219",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "5e4309f04577d219",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "5e4309f04577d219",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "36f0c5ac2614a7b2",
+   "category": "Language-only"
+  },
+  {
+   "location": "36f0c5ac2614a7b2",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "36f0c5ac2614a7b2",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "becf532ab24aff22",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "becf532ab24aff22",
+   "category": "Language-only"
+  },
+  {
+   "location": "becf532ab24aff22",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "c36797b9168c45ff",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "c36797b9168c45ff",
+   "category": "Tool-related"
+  },
+  {
+   "location": "c36797b9168c45ff",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "3e8a9d95bc50d7e0",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "3e8a9d95bc50d7e0",
+   "category": "Language-only"
+  },
+  {
+   "location": "3e8a9d95bc50d7e0",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "4061983bf659963e",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "4061983bf659963e",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "4061983bf659963e",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "2598742b3ab63068",
+   "category": "Language-only"
+  },
+  {
+   "location": "2598742b3ab63068",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "2598742b3ab63068",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "c28d32b92b1b7117",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "c28d32b92b1b7117",
+   "category": "Language-only"
+  },
+  {
+   "location": "c28d32b92b1b7117",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "bdb23f3ff1c00257",
+   "category": "Tool-related"
+  },
+  {
+   "location": "bdb23f3ff1c00257",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "bdb23f3ff1c00257",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "101f42b3dad5a0d1",
+   "category": "Language-only"
+  },
+  {
+   "location": "101f42b3dad5a0d1",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "101f42b3dad5a0d1",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "610df94b266f9115",
+   "category": "Tool-related"
+  },
+  {
+   "location": "610df94b266f9115",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "610df94b266f9115",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "8133aad4e05365c5",
+   "category": "Language-only"
+  },
+  {
+   "location": "8133aad4e05365c5",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8133aad4e05365c5",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "a4064a64f04fb420",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "a4064a64f04fb420",
+   "category": "Language-only"
+  },
+  {
+   "location": "a4064a64f04fb420",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "9797bcca5c794c95",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "9797bcca5c794c95",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "9797bcca5c794c95",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "b859aeaf858c7ad9",
+   "category": "Language-only"
+  },
+  {
+   "location": "b859aeaf858c7ad9",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "b859aeaf858c7ad9",
+   "category": "Formatting Errors"
+  }
+ ]
+}

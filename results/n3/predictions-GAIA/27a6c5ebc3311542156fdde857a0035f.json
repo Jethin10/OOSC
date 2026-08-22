@@ -1,0 +1,92 @@
+{
+ "errors": [
+  {
+   "location": "b71697f54bcfb6a0",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "b71697f54bcfb6a0",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "b71697f54bcfb6a0",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "35fd0c950b2c5e6c",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "35fd0c950b2c5e6c",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "35fd0c950b2c5e6c",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "a84dc67c56cd1af3",
+   "category": "Language-only"
+  },
+  {
+   "location": "a84dc67c56cd1af3",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "a84dc67c56cd1af3",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "554e87d9d41070e1",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "554e87d9d41070e1",
+   "category": "Language-only"
+  },
+  {
+   "location": "554e87d9d41070e1",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "8a03a1e0d8ac781d",
+   "category": "Authentication Errors"
+  },
+  {
+   "location": "3e1d09d2d712c5bb",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "3e1d09d2d712c5bb",
+   "category": "Language-only"
+  },
+  {
+   "location": "3e1d09d2d712c5bb",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "d0dad7d84f45ca8f",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "d0dad7d84f45ca8f",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "d0dad7d84f45ca8f",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "c09d6c8c77e8aa4f",
+   "category": "Language-only"
+  },
+  {
+   "location": "c09d6c8c77e8aa4f",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "c09d6c8c77e8aa4f",
+   "category": "Formatting Errors"
+  }
+ ]
+}

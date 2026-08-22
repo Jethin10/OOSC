@@ -1,0 +1,17 @@
+{
+ "GAIA": {
+  "traces": 116,
+  "joint_accuracy": 0.4984,
+  "location_accuracy": 0.9741,
+  "weighted_f1": 0.4641
+ },
+ "SWE Bench": {
+  "traces": 31,
+  "joint_accuracy": 0.3437,
+  "location_accuracy": 0.9612,
+  "weighted_f1": 0.667
+ },
+ "_overall": {
+  "joint_accuracy": 0.4658
+ }
+}

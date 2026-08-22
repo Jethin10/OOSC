@@ -1,0 +1,124 @@
+{
+ "errors": [
+  {
+   "location": "71e463a9ade47ef5",
+   "category": "Tool-related"
+  },
+  {
+   "location": "71e463a9ade47ef5",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "71e463a9ade47ef5",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "2e7796cfad523f7d",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "2e7796cfad523f7d",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "2e7796cfad523f7d",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "5b3b34c080083057",
+   "category": "Tool-related"
+  },
+  {
+   "location": "5b3b34c080083057",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "5b3b34c080083057",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "eed5fd92819ae071",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "eed5fd92819ae071",
+   "category": "Language-only"
+  },
+  {
+   "location": "eed5fd92819ae071",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "4641b34fa8c5b5cf",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "4641b34fa8c5b5cf",
+   "category": "Language-only"
+  },
+  {
+   "location": "4641b34fa8c5b5cf",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "70cfa46635ff5aa7",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "70cfa46635ff5aa7",
+   "category": "Language-only"
+  },
+  {
+   "location": "70cfa46635ff5aa7",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "62e36a3c64806cff",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "62e36a3c64806cff",
+   "category": "Language-only"
+  },
+  {
+   "location": "62e36a3c64806cff",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "6c47f3a8cf4bd36d",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "6c47f3a8cf4bd36d",
+   "category": "Language-only"
+  },
+  {
+   "location": "6c47f3a8cf4bd36d",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "b67ce1b1f28ed513",
+   "category": "Tool-related"
+  },
+  {
+   "location": "b67ce1b1f28ed513",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "b67ce1b1f28ed513",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "a72647d3aa7d330c",
+   "category": "Tool-related"
+  },
+  {
+   "location": "a72647d3aa7d330c",
+   "category": "Rate Limiting"
+  },
+  {
+   "location": "a72647d3aa7d330c",
+   "category": "Formatting Errors"
+  }
+ ]
+}

@@ -1,0 +1,112 @@
+{
+ "errors": [
+  {
+   "location": "58f25bb36a9a701d",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "58f25bb36a9a701d",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "58f25bb36a9a701d",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "823c442268f627e9",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "823c442268f627e9",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "823c442268f627e9",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "3de670b65254d662",
+   "category": "Language-only"
+  },
+  {
+   "location": "3de670b65254d662",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "3de670b65254d662",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "a81a9fa35451699b",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "a81a9fa35451699b",
+   "category": "Language-only"
+  },
+  {
+   "location": "a81a9fa35451699b",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "c47eaba10fb47203",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "c47eaba10fb47203",
+   "category": "Language-only"
+  },
+  {
+   "location": "c47eaba10fb47203",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "3bedbfc9d1207722",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "3bedbfc9d1207722",
+   "category": "Language-only"
+  },
+  {
+   "location": "3bedbfc9d1207722",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "94f565062ff2071c",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "94f565062ff2071c",
+   "category": "Language-only"
+  },
+  {
+   "location": "94f565062ff2071c",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "d86d848359bd74b5",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "d86d848359bd74b5",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "d86d848359bd74b5",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "1c6aa5a46282c75d",
+   "category": "Language-only"
+  },
+  {
+   "location": "1c6aa5a46282c75d",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "1c6aa5a46282c75d",
+   "category": "Formatting Errors"
+  }
+ ]
+}

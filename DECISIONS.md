@@ -86,3 +86,11 @@ base tasks), restoring exactly 86. Attack matrix (template-based, offline,
 no attacker LLM): direct, ignore_previous, system_message, injecagent,
 important_instructions, important_instructions_no_user_name,
 important_instructions_no_model_name. Frozen.
+
+## D11 - TRAIL classifier is rule-based and evidence-gated
+
+The N3 detector uses only observable span evidence (status codes, exception
+traces, span role, log keywords), emits at most 3 categories per suspicious
+span with a minimum evidence weight, and never sees annotations. Scored with
+their own calculate_scores.py on their metric (Location-Category joint
+accuracy). Weighted F1 reported alongside for precision transparency.

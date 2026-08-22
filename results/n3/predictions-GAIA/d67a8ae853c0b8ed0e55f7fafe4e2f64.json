@@ -1,0 +1,116 @@
+{
+ "errors": [
+  {
+   "location": "2261d11f52323242",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "2261d11f52323242",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "2261d11f52323242",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "66ed5810caf7d83e",
+   "category": "Context Handling Failures"
+  },
+  {
+   "location": "66ed5810caf7d83e",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "66ed5810caf7d83e",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "5c0487005c15d4c4",
+   "category": "Language-only"
+  },
+  {
+   "location": "5c0487005c15d4c4",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5c0487005c15d4c4",
+   "category": "Formatting Errors"
+  },
+  {
+   "location": "401db10d9f8144e6",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "401db10d9f8144e6",
+   "category": "Language-only"
+  },
+  {
+   "location": "401db10d9f8144e6",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "9179faddc634b287",
+   "category": "Tool-related"
+  },
+  {
+   "location": "9179faddc634b287",
+   "category": "Resource Not Found"
+  },
+  {
+   "location": "9179faddc634b287",
+   "category": "Resource Abuse"
+  },
+  {
+   "location": "dc63c344d10012bc",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "dc63c344d10012bc",
+   "category": "Language-only"
+  },
+  {
+   "location": "dc63c344d10012bc",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "5ebaa8aa05dbce52",
+   "category": "Authentication Errors"
+  },
+  {
+   "location": "634212c58b4e20c7",
+   "category": "Goal Deviation"
+  },
+  {
+   "location": "634212c58b4e20c7",
+   "category": "Language-only"
+  },
+  {
+   "location": "634212c58b4e20c7",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "3b5a70c5cd745e26",
+   "category": "Tool Selection Errors"
+  },
+  {
+   "location": "3b5a70c5cd745e26",
+   "category": "Poor Information Retrieval"
+  },
+  {
+   "location": "3b5a70c5cd745e26",
+   "category": "Task Orchestration"
+  },
+  {
+   "location": "3cb1fe602673e179",
+   "category": "Language-only"
+  },
+  {
+   "location": "3cb1fe602673e179",
+   "category": "Instruction Non-compliance"
+  },
+  {
+   "location": "3cb1fe602673e179",
+   "category": "Formatting Errors"
+  }
+ ]
+}
