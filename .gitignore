@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Vendored benchmark clones (see DECISIONS.md D8)
+vendor/
+
+# Run artifacts we don't commit
+results/raw/
+*.log
+.DS_Store
