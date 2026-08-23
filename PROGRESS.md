@@ -12,7 +12,7 @@
 | 1 | Oracle agreement vs tau2-bench gold rewards | all 164 tasks; ≥95% dev AND holdout | **98.48%** (1312 trajectories; dev 98.72%, holdout 97.22%, retail 100%) | ✅ WON |
 | 2 | Rediscovery of tau2 hand-authored tasks | generator never reads tasks.json; target ≥50% strict | **9.2% strict** / 37.8% writes-only (2.1M signatures) | 🅿️ PARKED |
 | 3 | TRAIL classifier joint accuracy | beat published best 11% | **46.6%** (GAIA 49.8%, SWE 34.4%; loc 97%; F1 .47/.67) | ✅ WON |
-| 4 | agentdojo unsafe-action catch rate | 629 cases; only world-state-reproducible findings count; target ≥80% + benign FPR reported | **99.2%** catch (622/629), reproducible 626, benign FPR 0/86 | ✅ WON |
+| 4 | agentdojo unsafe-action catch rate | 629 cases; only world-state-reproducible findings count; target ≥80% + benign FPR reported | **98.9%** catch over all 629 (622 flagged; 99.4% of 626 reproducible); arg-taint-only 98.1%; benign FPR 0/86 | ✅ WON |
 | UI | Linear-bar scorecard | every interaction ≤100ms feedback; ≥60fps full-data screen; desktop+mobile vs linear.app screenshots | — | ⏳ queued |
 
 **Won:** N1 oracle agreement, N3 TRAIL joint accuracy, N4 agentdojo catch rate.
@@ -41,7 +41,9 @@ Full analysis in `results/n2/report.json`. Revisit if time remains.
 - **02:40** Fixes: canonical ledger ordering; dict-traversing resolution;
   reference-integrity / duplicate-ref / payment-balance vetoes from data alone;
   executable corruption fillers (real ids, documented example values).
-- **02:55** N1 final: **98.48%** — cleared on dev AND holdout. Frozen honestly;
+- **02:55** N1 final: **98.48%** combined — holdout 97.22%. Per-domain caveat,
+  stated plainly: retail holdout 100%, airline holdout 91.67% on a small cell
+  (66/72). The combined bar holds; airline-only holdout does not. Frozen;
   residual airline gaps sit exactly in their hand-written business rules
   (multi-segment pricing, passenger checks) that schema-only derivation
   intentionally does not copy.
@@ -51,6 +53,7 @@ Full analysis in `results/n2/report.json`. Revisit if time remains.
   blockers (authoring idiosyncrasy + free-text ceiling).
 - **04:30** N4 agentdojo: pinned v0.1.2 (D10), 629-case universe restored.
   Guardrail classifier (argument taint + poisoned-read proximity, mutation-
-  verified) catches 622/629 = **99.2%**, benign FPR 0. **WON**.
+  verified) catches 622/629 = **98.9%** over the full universe (**99.4%** of the
+  626 world-state-reproduced cases), benign FPR 0. **WON**.
 - **05:10** N3 TRAIL: rule-based span-evidence classifier scores **46.6%**
   joint accuracy with their own scorer vs ~11% published best. **WON**.

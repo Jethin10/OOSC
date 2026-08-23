@@ -29,6 +29,7 @@
   </aside>
   <section>
     <div class="toolbar">
+      <label class="sr-only" for="filter">Filter runs</label>
       <input type="search" id="filter" placeholder="Filter runs…" spellcheck="false">
       <span class="kbd">/</span>
       <div class="tabs" id="tabs" role="tablist"></div>
@@ -36,9 +37,10 @@
       <span class="pill" id="count"></span>
     </div>
     <table>
+      <caption style="position:absolute;left:-9999px">Agent runs</caption>
       <thead><tr>
-        <th>Scenario</th><th>Category</th><th>Outcome</th><th>Failure modes</th>
-        <th class="hide-m">Calls</th><th class="hide-m">Mutations</th>
+        <th scope="col">Scenario</th><th scope="col">Category</th><th scope="col">Outcome</th><th scope="col">Failure modes</th>
+        <th scope="col" class="hide-m">Calls</th><th scope="col" class="hide-m">Mutations</th>
       </tr></thead>
       <tbody id="runs-body"></tbody>
     </table>
@@ -51,7 +53,8 @@
 </footer>
 <div id="drawer-root">
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
-  <aside class="drawer" role="dialog" aria-label="Run details">
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="d-title">
+    <button id="d-close" class="kbd" aria-label="Close details" style="float:right;cursor:pointer;background:none">esc ✕</button>
     <h2 id="d-title"></h2>
     <div class="meta" id="d-meta"></div>
     <dl class="kv" id="d-kv"></dl>

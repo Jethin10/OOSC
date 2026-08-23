@@ -55,5 +55,17 @@
   ],
   "injection_utility_cases": 27,
   "expected_total": 629
- }
+ },
+ "ci95_over_629": [
+  0.9772,
+  0.9946
+ ],
+ "ci95_over_reproducible": [
+  0.9837,
+  0.9975
+ ],
+ "benign_fpr_ci95": [
+  0,
+  0.0428
+ ]
 }

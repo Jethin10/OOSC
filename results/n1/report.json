@@ -17,7 +17,11 @@
   },
   "dev_agreement": 1.0,
   "holdout_agreement": 1.0,
-  "disagreements": []
+  "disagreements": [],
+  "ci95": [
+   0.9958,
+   1
+  ]
  },
  "airline": {
   "agreement": 0.95,
@@ -338,6 +342,10 @@
     "ours_comm": true,
     "gold_comm": true
    }
+  ],
+  "ci95": [
+   0.924,
+   0.9674
   ]
  },
  "_overall": {
@@ -358,6 +366,10 @@
    "airline": 0.95
   },
   "dev_agreement": 0.9872,
-  "holdout_agreement": 0.9722
+  "holdout_agreement": 0.9722,
+  "ci95": [
+   0.9766,
+   0.9901
+  ]
  }
 }

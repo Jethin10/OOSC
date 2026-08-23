@@ -1,0 +1,21 @@
+{
+ "interaction_latency_ms": {
+  "filter_typing": {
+   "max": 124.9,
+   "avg": 21.7
+  },
+  "row_select": {
+   "max": 19.6,
+   "avg": 13.9
+  },
+  "tab_switch": {
+   "max": 15.7,
+   "avg": 13.8
+  }
+ },
+ "animation": {
+  "frames": 289,
+  "duration_ms": 2004.399999997765,
+  "fps": 144.2
+ }
+}

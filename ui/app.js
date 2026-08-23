@@ -43,7 +43,7 @@ function renderSidebar() {
       el("span", { class: "name" }, c.category),
       el("span", { class: "rate" }, fmtPct(c.reliability)),
       el("div", { class: "bar" }, (() => {
-        const i = el("i"); i.style.width = (c.reliability * 100) + "%"; return i;
+        const i = el("i"); i.style.transform = `scaleX(${c.reliability})`; return i;
       })()),
     );
     list.appendChild(row);
@@ -68,8 +68,14 @@ function rowsFor() {
   const d = state.data;
   const q = state.filter.trim().toLowerCase();
   let rows = d.runs.filter((r) => r.agent === state.agent);
-  if (q) rows = rows.filter((r) => (r.scenario + " " + r.category + " " + r.failures.join(" ")).toLowerCase().includes(q));
+  if (q) rows = rows.filter((r) => r._search.includes(q));
   return rows;
+}
+
+function indexSearchText() {
+  for (const r of state.data.runs) {
+    r._search = (r.scenario + " " + r.category + " " + r.failures.join(" ")).toLowerCase();
+  }
 }
 
 function renderTable() {
@@ -103,13 +109,14 @@ function renderTable() {
   }
   for (let i = 0; i < pool.length; i++) {
     const tr = pool[i];
+    if (tr.parentNode !== tbody) tbody.appendChild(tr); // reattach after empty renders
     if (i < rows.length) {
       const r = rows[i];
       const [tdId, tdCat, tdOut, tdFail, tdCalls, tdMut] = tr.children;
       tdId.textContent = r.scenario;
       tdCat.textContent = r.category;
       tdOut.className = "";
-      tdOut.appendChild(r.success ? el("span", { class: "ok-dot", title: "pass" }) : el("span", { class: "fail-dot", title: "fail" }));
+      tdOut.replaceChildren(r.success ? el("span", { class: "ok-dot", title: "pass" }) : el("span", { class: "fail-dot", title: "fail" }));
       tdFail.textContent = "";
       if (r.failures.length) {
         for (const k of r.failures) tdFail.appendChild(el("span", { class: "chip bad" }, k.replace(/_/g, " ")));
@@ -141,6 +148,8 @@ function selectRow(i, openDrawer = false) {
 function openDetail(r) {
   const d = $("#drawer-root");
   d.classList.add("open");
+  state._drawerReturnFocus = document.activeElement;
+  $("#d-close").focus();
   $("#d-title").textContent = r.scenario;
   $("#d-meta").textContent = `${r.agent} · ${r.category}`;
   const kv = $("#d-kv");
@@ -158,7 +167,11 @@ function openDetail(r) {
   add("failure modes", r.failures.length ? r.failures.join(", ").replace(/_/g, " ") : "none detected");
 }
 
-function closeDrawer() { $("#drawer-root").classList.remove("open"); }
+function closeDrawer() {
+  if (!$("#drawer-root").classList.contains("open")) return;
+  $("#drawer-root").classList.remove("open");
+  if (state._drawerReturnFocus && state._drawerReturnFocus.focus) state._drawerReturnFocus.focus();
+}
 
 /* ---------- interactions (all synchronous < 100ms) ---------- */
 function bind() {
@@ -211,12 +224,22 @@ async function init() {
     data = window.__SCORECARD__;
   }
   state.data = data;
+  indexSearchText();
   $("#generated").textContent = new Date(data.generated_at).toLocaleString();
   $("#replay").textContent = `replay verified · ${data.replay_failures} failures`;
   buildTabs();
   renderSidebar();
   renderTable();
   bind();
+  // Warm the filter path once at startup so the first user keystroke pays no
+  // JIT/layout cost: render, revert, yield a frame.
+  requestAnimationFrame(() => {
+    const f = $("#filter");
+    f.value = "~warmup";
+    f.dispatchEvent(new Event("input", { bubbles: true }));
+    f.value = "";
+    f.dispatchEvent(new Event("input", { bubbles: true }));
+  });
   document.body.dataset.ready = "1";
 }
 
