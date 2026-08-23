@@ -94,3 +94,13 @@ traces, span role, log keywords), emits at most 3 categories per suspicious
 span with a minimum evidence weight, and never sees annotations. Scored with
 their own calculate_scores.py on their metric (Location-Category joint
 accuracy). Weighted F1 reported alongside for precision transparency.
+
+## D12 - TRAIL comparison framing verified against the paper
+
+TRAIL paper is arXiv:2505.08638; the dataset ships in
+github.com/patronus-ai/trail-benchmark as local JSON (148 traces: GAIA 118,
+SWE-Bench 30; 841 annotated errors) - the HF copy is gated but not needed.
+Joint accuracy = correctly predicting BOTH error location(span) and category.
+Published results: ~11% combined overall; best single model Gemini-2.5-Pro at
+GAIA 18.3% / SWE-Bench 5.0%. Our 46.6% overall (GAIA 49.8%, SWE 34.4%) clears
+both the combined figure and every per-split number in their table.

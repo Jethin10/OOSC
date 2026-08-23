@@ -29,9 +29,10 @@ Sleep through this if you want; `PROGRESS.md` has the ten-second version.
    ceiling: 43/164 tasks contain free-text payloads (new addresses etc.) that no
    schema+data process can produce. Full blocker analysis in
    `results/n2/report.json` + DECISIONS D9.
-3. **TRAIL joint accuracy — 46.6%** vs ~11% published best (GAIA 49.8%, SWE-Bench
-   34.4%), scored by trail-benchmark's own scorer; weighted F1 0.47/0.67 also
-   reported. Rule-based span-evidence classifier, zero label access. `scripts/run_n3.py`.
+3. **TRAIL joint accuracy — 46.6%** overall vs ~11% published combined best
+   (per-split: GAIA 49.8% vs their best 18.3%; SWE-Bench 34.4% vs their best
+   5.0%), scored by trail-benchmark's own scorer on the repo-shipped annotated
+   traces (paper arXiv:2505.08638); weighted F1 0.47/0.67 also reported. Rule-based span-evidence classifier, zero label access. `scripts/run_n3.py`.
 4. **agentdojo unsafe-action catch — 98.9% of the full 629-case universe** (622 flagged;
    99.4% of the 626 cases reproduced against real mutated world state), counting only
    findings agentdojo's own security checks confirm in real mutated world state;
