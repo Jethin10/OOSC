@@ -274,6 +274,14 @@
   "strict": "15/164",
   "strict_rate": 0.0915,
   "writes_only": "62/164",
-  "writes_only_rate": 0.378
+  "writes_only_rate": 0.378,
+  "ci95_strict": [
+   0.0562,
+   0.1454
+  ],
+  "ci95_writes_only": [
+   0.3074,
+   0.4543
+  ]
  }
 }
