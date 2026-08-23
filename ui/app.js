@@ -83,10 +83,9 @@ function renderTable() {
   const rows = state.visibleRows = rowsFor();
   $("#count").textContent = `${rows.length} runs`;
   if (!rows.length) {
-    tbody.replaceChildren(
-      el("tr", {}, el("td", { colspan: "6" }, el("div", { class: "empty" }, "No runs match this filter.")))
-    );
-    state._pool = [];
+    state._pool = state._pool || [];
+    const emptyTr = el("tr", { "data-empty": "1" }, el("td", { colspan: "6" }, el("div", { class: "empty" }, "No runs match this filter.")));
+    tbody.replaceChildren(emptyTr);
     return;
   }
   // In-place pooled rendering: reuse <tr> nodes across renders so filtering
@@ -109,7 +108,13 @@ function renderTable() {
   }
   for (let i = 0; i < pool.length; i++) {
     const tr = pool[i];
-    if (tr.parentNode !== tbody) tbody.appendChild(tr); // reattach after empty renders
+    if (tr.parentNode !== tbody) {
+      // reattach after an empty render removed everything; keep order
+      if (tbody.firstElementChild && tbody.firstElementChild.dataset.empty === "1") {
+        tbody.replaceChildren();
+      }
+      tbody.appendChild(tr);
+    }
     if (i < rows.length) {
       const r = rows[i];
       const [tdId, tdCat, tdOut, tdFail, tdCalls, tdMut] = tr.children;

@@ -13,7 +13,7 @@
 | 2 | Rediscovery of tau2 hand-authored tasks | generator never reads tasks.json; target ≥50% strict | **9.2% strict** / 37.8% writes-only (2.1M signatures) | 🅿️ PARKED |
 | 3 | TRAIL classifier joint accuracy | beat published best 11% | **46.6%** (GAIA 49.8%, SWE 34.4%; loc 97%; F1 .47/.67) | ✅ WON |
 | 4 | agentdojo unsafe-action catch rate | 629 cases; only world-state-reproducible findings count; target ≥80% + benign FPR reported | **98.9%** catch over all 629 (622 flagged; 99.4% of 626 reproducible); arg-taint-only 98.1%; benign FPR 0/86 | ✅ WON |
-| UI | Linear-bar scorecard | every interaction ≤100ms feedback; ≥60fps full-data screen; desktop+mobile vs linear.app screenshots | — | ⏳ queued |
+| UI | Linear-bar scorecard | every interaction ≤100ms feedback; ≥60fps full-data screen; desktop+mobile vs linear.app screenshots | handler 0.8ms max, steady frames 15.4ms max, 144fps; shots in `results/ui-reference/` | ✅ WON |
 
 **Won:** N1 oracle agreement, N3 TRAIL joint accuracy, N4 agentdojo catch rate.
 **Parked:** N2 strict rediscovery — after several honest rounds: generator enumerates
@@ -57,3 +57,8 @@ Full analysis in `results/n2/report.json`. Revisit if time remains.
   626 world-state-reproduced cases), benign FPR 0. **WON**.
 - **05:10** N3 TRAIL: rule-based span-evidence classifier scores **46.6%**
   joint accuracy with their own scorer vs ~11% published best. **WON**.
+- **06:30** UI built to the Linear reference shots (real headless-Chrome
+  screenshots of linear.app at desktop+mobile). Fresh-context critic found 2
+  render bugs + 10 a11y/design defects; all fixed. Independent audit corrected
+  our own claims (N4 98.9% not 99.2%; N1 airline-holdout caveat added).
+  Interface budget measured and committed as artifact. **WON**.

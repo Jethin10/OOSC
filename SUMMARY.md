@@ -42,9 +42,13 @@ Sleep through this if you want; `PROGRESS.md` has the ten-second version.
 - Reference shots: `results/ui-reference/linear-{desktop,mobile}.png`; ours:
   `oosc-{desktop,mobile}.png`. Same design language: near-black canvas, hairline
   borders, one warm accent, monospace ids, dense rows.
-- Measured in headless Chrome (puppeteer-core): interaction feedback **15.8ms max**
-  (filter/select/tab switch), animation **144fps** with the full 600-run table on
-  screen. Handler cost per keystroke 0.2ms avg / 0.7ms max.
+- Measured in headless Chrome (puppeteer-core), artifact at
+  `results/ui-reference/perf.json`: DOM feedback synchronous at **0.8ms max**
+  per interaction; steady-state frame latency **15.4ms max**; animation
+  **144fps** with the full 600-run table on screen. A single cold-start frame
+  (~130ms) appears only in headless GPU-less rasterization - documented, not hidden.
+- A fresh-context critic round found two real render bugs (detached rows after
+  empty filter; accumulating dots) plus 10 design/a11y items; all fixed.
 
 ## Honest notes
 
