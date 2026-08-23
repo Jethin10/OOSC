@@ -132,6 +132,8 @@ function renderTable() {
       tdMut.textContent = String(r.mutations);
       tr.style.display = "";
       tr.classList.toggle("selected", i === state.selected);
+      tr.setAttribute("aria-selected", String(i === state.selected));
+      tr.tabIndex = -1;
       tr.dataset.i = String(i);
     } else {
       tr.style.display = "none";
@@ -146,7 +148,10 @@ function selectRow(i, openDrawer = false) {
   const table = $("#runs-body");
   [...table.children].forEach((tr, j) => tr.classList.toggle("selected", j === state.selected));
   const sel = table.children[state.selected];
-  if (sel) sel.scrollIntoView({ block: "nearest" });
+  if (sel) {
+    sel.scrollIntoView({ block: "nearest" });
+    sel.focus({ preventScroll: true });
+  }
   if (openDrawer) openDetail(rows[state.selected]);
 }
 
@@ -216,7 +221,7 @@ function buildTabs() {
   const tabs = $("#tabs");
   tabs.textContent = "";
   for (const name of Object.keys(state.data.scorecards)) {
-    tabs.appendChild(el("button", { "data-agent": name, "aria-selected": String(name === state.agent) },
+    tabs.appendChild(el("button", { role: "tab", "data-agent": name, "aria-selected": String(name === state.agent) },
       name.replace(/-/g, " ")));
   }
 }
