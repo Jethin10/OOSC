@@ -1,0 +1,20 @@
+name: agent-reliability-ci
+on: [push, pull_request]
+jobs:
+  reliability-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install engine
+        run: pip install -e engine
+      - name: Run reliability suite (schema-derived world, no LLM)
+        run: |
+          python -c "
+          from pathlib import Path
+          from oosc.adapters.tau2_export import write_export
+          write_export('retail', Path('results/repro/schema'))" || echo "tau2 export skipped (vendor not present in CI)"
+          python -m oosc.cli ci --max-scenarios 60 --out results/ci

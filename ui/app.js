@@ -169,10 +169,11 @@ function bind() {
   });
   $("#tabs").addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-agent]");
-    if (!btn) return;
-    for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b === btn));
+    if (!btn || btn.dataset.agent === state.agent) return;
     state.agent = btn.dataset.agent;
     state.selected = -1;
+    for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.agent === state.agent));
+    closeDrawer();
     renderSidebar();
     renderTable();
   });
