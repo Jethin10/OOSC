@@ -5,7 +5,7 @@
  "scorecards": {
   "clean-agent": {
    "agent_version": "clean-agent",
-   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "generated_at": "2026-08-23T00:59:42.015212+00:00",
    "overall": {
     "runs": 60,
     "successes": 60,
@@ -64,7 +64,7 @@
   },
   "loopy-agent": {
    "agent_version": "loopy-agent",
-   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "generated_at": "2026-08-23T00:59:42.015212+00:00",
    "overall": {
     "runs": 60,
     "successes": 0,
@@ -131,7 +131,7 @@
   },
   "overconfident-agent": {
    "agent_version": "overconfident-agent",
-   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "generated_at": "2026-08-23T00:59:42.015212+00:00",
    "overall": {
     "runs": 60,
     "successes": 0,
@@ -198,7 +198,7 @@
   },
   "reckless-agent": {
    "agent_version": "reckless-agent",
-   "generated_at": "2026-08-22T23:12:02.588353+00:00",
+   "generated_at": "2026-08-23T00:59:42.015212+00:00",
    "overall": {
     "runs": 60,
     "successes": 0,
