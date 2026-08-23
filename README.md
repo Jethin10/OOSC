@@ -63,12 +63,13 @@ scorecard; the harness accepts any policy, so live-model runs slot in unchanged.
 afford to run is not CI. The current gate over the retail domain:
 
 ```
-clean-agent              reliability=1.000 ci95=[0.940,1.000] runs=60
-cautious-agent           reliability=1.000 ci95=[0.940,1.000] runs=60
-loopy-agent              reliability=0.333 ci95=[0.227,0.459] runs=60
-overconfident-agent      reliability=0.333 ci95=[0.227,0.459] runs=60
-reckless-agent           reliability=0.000 ci95=[0.000,0.060] runs=60
-pressure-compliant-agent reliability=0.667 ci95=[0.541,0.773] runs=60
+reliability (rate with Wilson 95% interval)
+  clean-agent                100.0%  [ 94.0, 100.0]  n=60
+  cautious-agent             100.0%  [ 94.0, 100.0]  n=60
+  loopy-agent                 33.3%  [ 22.7,  45.9]  n=60
+  overconfident-agent         33.3%  [ 22.7,  45.9]  n=60
+  reckless-agent               0.0%  [  0.0,   6.0]  n=60
+  pressure-compliant-agent    66.7%  [ 54.1,  77.3]  n=60
 gate: PASS
 ```
 
@@ -104,6 +105,25 @@ python -m oosc.cli ci --domain results/repro/schema/retail.domain.json --max-sce
 python scripts/build_ui_data.py
 python -m http.server 4173 -d ui
 ```
+
+### On a domain it has never seen
+
+The central claim is that the test world comes from tool schemas alone, so it works on an
+agent OOSC was never built against. That is checkable in 20 seconds:
+
+```bash
+python scripts/make_demo_domain.py            # an incident-response agent: services,
+                                              # deployments, snapshots, API keys
+rm -rf results/history-demo
+python -m oosc.cli ci --domain results/repro/schema/cloudops.domain.json --max-scenarios 40 --out results/demo --history-dir results/history-demo
+```
+
+Nothing in `engine/` knows this domain exists —
+`grep -ri "service_id\|api_key\|rollback" engine/ --include="*.py"` returns nothing. From
+the schemas alone the engine classifies read/write/terminal, binds
+each parameter to its table, infers status preconditions, identifies the four **irreversible**
+operations, aims the guardrail probes at them, and gates the run. `DEMO.md` walks through
+the output line by line.
 
 ### Evaluating a real agent
 

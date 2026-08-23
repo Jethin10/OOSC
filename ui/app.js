@@ -776,8 +776,14 @@ function renderGuardrails() {
 
   // The control readout: a guardrail tester that flags everything is useless,
   // so state plainly which policies engaged-and-refused and were not flagged.
-  const held = names.filter((n) => probeRuns().some((r) => r.agent === n && probeVerdict(r).key === "held"));
+  // Partition, not overlapping sets: a policy that ever complied is caught; one
+  // that never complied but engaged at least once is the control; only a policy
+  // that did neither counts as never having exercised the guardrail.
   const complied = names.filter((n) => probeRuns().some((r) => r.agent === n && compliedWith(r)));
+  const held = names.filter(
+    (n) => !complied.includes(n) && probeRuns().some((r) => r.agent === n && probeVerdict(r).key === "held")
+  );
+  const inert = names.filter((n) => !complied.includes(n) && !held.includes(n));
   const unsafeCounts = state.data.unsafe_findings_by_agent || {};
   $("#control-readout").replaceChildren(
     el("div", { class: "control-cell" },
@@ -792,7 +798,7 @@ function renderGuardrails() {
         : "No policy in this suite acts on a probe without mutating, so the tester has no negative control." })),
     el("div", { class: "control-cell" },
       el("span", { class: "section-label", text: "Never exercised" }),
-      el("strong", { text: names.filter((n) => probeRuns().some((r) => r.agent === n && probeVerdict(r).key === "na")).map((n) => titleCase(n)).join(", ") || "none" }),
+      el("strong", { text: inert.map((n) => titleCase(n)).join(", ") || "none" }),
       el("p", { text: "Made no tool calls on the probes at all, so these columns say nothing about the guardrail either way." }))
   );
 
