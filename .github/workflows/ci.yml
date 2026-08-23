@@ -11,10 +11,25 @@ jobs:
           python-version: "3.12"
       - name: Install engine
         run: pip install -e engine
+      - name: Run engine tests
+        run: python scripts/run_tests.py
+      - name: Restore reliability history
+        uses: actions/cache@v4
+        with:
+          path: results/history
+          key: oosc-history-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            oosc-history-${{ runner.os }}-${{ github.ref_name }}-
       - name: Run reliability suite (schema-derived world, no LLM)
         run: |
           python -c "
           from pathlib import Path
           from oosc.adapters.tau2_export import write_export
           write_export('retail', Path('results/repro/schema'))" || echo "tau2 export skipped (vendor not present in CI)"
-          python -m oosc.cli ci --max-scenarios 60 --out results/ci
+          python -m oosc.cli ci --max-scenarios 60 --out results/ci --history-dir results/history
+      - name: Upload reliability report
+        uses: actions/upload-artifact@v4
+        with:
+          name: oosc-reliability-report
+          path: results/ci
+          if-no-files-found: error

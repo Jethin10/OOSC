@@ -27,6 +27,27 @@ PROGRESS.md    Live night log — numbers, wins, parked items
 DECISIONS.md   Every non-obvious decision and why
 ```
 
+## Run locally
+
+```bash
+pip install -e engine
+python scripts/run_tests.py
+oosc ci --domain results/repro/schema/retail.domain.json --max-scenarios 60
+python -m http.server 4173 -d ui
+```
+
+To evaluate a real agent, expose an HTTP endpoint that accepts normalized
+`scenario` and `domain` JSON and returns `{"steps": [{"text": "...", "calls": []}]}`:
+
+```bash
+oosc ci --agent-endpoint http://localhost:8000/evaluate --agent-version my-agent-v2
+```
+
+The CI command persists scorecards under `results/history/`, compares the
+current agent version with its previous baseline, and exits non-zero on a
+significant reliability regression.
+
 ## Status
 
-Work in progress — see `PROGRESS.md` for the live scoreboard.
+The platform now covers all five challenge directions. See `PROGRESS.md` for
+the benchmark evidence and remaining research targets.

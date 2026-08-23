@@ -605,11 +605,33 @@ class ScenarioGenerator:
                 break
         return {"strict": strict, "writes": writes}
 
-    def generate(self) -> list["Any"]:
-        """Bounded Scenario objects for platform/sandbox use."""
-        from oosc.schema import Scenario as ScenarioModel
+    def generate(
+        self,
+        limit: int | None = None,
+        include_adversarial: bool = True,
+    ) -> list["Any"]:
+        """Bounded scenarios for platform/sandbox use.
 
-        scenarios: list[ScenarioModel] = []
+        The benchmark-specialized stream is retained for historical
+        rediscovery evidence.  A schema-driven stream is always included so a
+        previously unseen domain produces useful scenarios immediately.
+        ``limit`` lets commit CI avoid materializing 50k objects before it
+        downsamples them.
+        """
+        from oosc.schema import Scenario as ScenarioModel
+        from oosc.generate.generic import GenericScenarioGenerator
+
+        generic = GenericScenarioGenerator(self.domain, seed=7)
+        generic_realistic = generic.generate_realistic(limit_per_tool=4)
+        generic_adversarial = (
+            generic.generate_adversarial(generic_realistic, limit=16)
+            if include_adversarial
+            else []
+        )
+        scenarios: list[ScenarioModel] = generic_realistic + generic_adversarial
+        target = min(self.budget, 50000) if limit is None else max(1, limit)
+        if len(scenarios) >= target:
+            return scenarios[:target]
         counter = 0
         for acts in self._iter_action_lists(breadth=False):
             counter += 1
@@ -627,6 +649,6 @@ class ScenarioGenerator:
                     meta={"op": write[0]},
                 )
             )
-            if len(scenarios) >= min(self.budget, 50000):
+            if len(scenarios) >= target:
                 break
         return scenarios

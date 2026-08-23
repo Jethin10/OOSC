@@ -15,5 +15,9 @@ vendor/
 
 # Run artifacts we don't commit
 results/raw/
+results/history/
+results/ci-next/
+results/history-next/
+.playwright-cli/
 *.log
 .DS_Store

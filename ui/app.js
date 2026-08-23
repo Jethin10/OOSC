@@ -1,256 +1,127 @@
-/* OOSC Scorecard app — no dependencies, synchronous interactions, transform/opacity motion only. */
 "use strict";
 
-const state = {
-  data: null,
-  agent: "clean-agent",
-  filter: "",
-  selected: -1,
-  visibleRows: [],
-};
+const state = { data: null, agent: "", filter: "", type: "", selected: -1, visibleRows: [] };
+const $ = (selector) => document.querySelector(selector);
 
-const $ = (sel) => document.querySelector(sel);
-
-function el(tag, attrs = {}, ...children) {
-  const n = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (k === "class") n.className = v;
-    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
-    else n.setAttribute(k, v);
+function element(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === "class") node.className = value;
+    else if (key === "style") node.style.cssText = value;
+    else node.setAttribute(key, value);
   }
-  for (const c of children.flat(Infinity)) {
-    if (c === null || c === undefined || c === false) continue;
-    n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  for (const child of children.flat()) {
+    if (child === null || child === undefined || child === false) continue;
+    node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
   }
-  return n;
+  return node;
 }
 
-function fmtPct(x) { return (x * 100).toFixed(1) + "%"; }
+const formatPercent = (value) => `${(Number(value || 0) * 100).toFixed(1)}%`;
+const titleCase = (value) => String(value || "").replace(/[_-]/g, " ").replace(/:\s*/g, ": ").replace(/\b\w/g, (c) => c.toUpperCase());
+const activeCard = () => state.data.scorecards[state.agent];
 
-function renderSidebar() {
-  const d = state.data;
-  const overall = d.scorecards[state.agent].overall;
-  $("#overall-rate").textContent = fmtPct(overall.reliability);
-  $("#overall-runs").textContent = `${overall.runs} runs · ${d.domain} · suite ${d.suite_size}`;
-  const bar = $("#overall-ci");
-  bar.style.left = (overall.ci95[0] * 100) + "%";
-  bar.style.width = Math.max(0.5, (overall.ci95[1] - overall.ci95[0]) * 100) + "%";
-
-  const list = $("#cats");
-  list.textContent = "";
-  for (const c of d.scorecards[state.agent].categories) {
-    const row = el("div", { class: "cat" },
-      el("span", { class: "name" }, c.category),
-      el("span", { class: "rate" }, fmtPct(c.reliability)),
-      el("div", { class: "bar" }, (() => {
-        const i = el("i"); i.style.transform = `scaleX(${c.reliability})`; return i;
-      })()),
-    );
-    list.appendChild(row);
-  }
-
-  const legend = $("#legend");
-  legend.textContent = "";
-  const kinds = {};
-  for (const r of d.runs) if (r.agent === state.agent && !r.success) for (const k of r.failures) kinds[k] = (kinds[k] || 0) + 1;
-  const colors = { tool_loop: "#f2c94c", hallucinated_confidence: "#eb5757", unsafe_action: "#e0876a", goal_drift: "#b58af7" };
-  const entries = Object.entries(kinds).sort((a, b) => b[1] - a[1]);
-  if (!entries.length) legend.appendChild(el("div", { class: "row" }, "No failures recorded."));
-  for (const [k, v] of entries) {
-    legend.appendChild(el("div", { class: "row" },
-      el("span", { class: "dot", style: `background:${colors[k] || "#8a8f98"}` }),
-      `${k.replace(/_/g, " ")}`, el("span", { style: "margin-left:auto;font-variant-numeric:tabular-nums" }, String(v)),
-    ));
-  }
+function renderSummary() {
+  const data = state.data;
+  const overall = activeCard().overall;
+  $("#overall-rate").textContent = (overall.reliability * 100).toFixed(1);
+  $("#overall-runs").textContent = `${overall.runs} runs · ${data.domain} domain`;
+  const interval = $("#overall-ci");
+  interval.style.left = `${overall.ci95[0] * 100}%`;
+  interval.style.width = `${Math.max(1, (overall.ci95[1] - overall.ci95[0]) * 100)}%`;
+  $("#cats").replaceChildren(...activeCard().categories.map((category) => {
+    const fill = element("i"); fill.style.transform = `scaleX(${category.reliability})`;
+    return element("div", { class: "category" }, element("div", {}, element("span", {}, titleCase(category.category)), element("b", {}, formatPercent(category.reliability))), element("div", { class: "category-bar" }, fill));
+  }));
+  const counts = {};
+  for (const run of data.runs || []) if (run.agent === state.agent) for (const failure of run.failures || []) counts[failure] = (counts[failure] || 0) + 1;
+  const colors = { tool_loop: "#f5c451", hallucinated_confidence: "#f06f6f", unsafe_action: "#ec8f6a", goal_drift: "#a78bfa" };
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  $("#legend").replaceChildren(...(entries.length ? entries.map(([kind, count]) => element("div", { class: "legend-row" }, element("span", { class: "legend-dot", style: `background:${colors[kind] || "#88909c"}` }), element("span", {}, titleCase(kind)), element("b", {}, String(count)))) : [element("div", { class: "muted empty-legend" }, "No failures detected")]));
 }
 
-function rowsFor() {
-  const d = state.data;
-  const q = state.filter.trim().toLowerCase();
-  let rows = d.runs.filter((r) => r.agent === state.agent);
-  if (q) rows = rows.filter((r) => r._search.includes(q));
-  return rows;
+function renderTopMetrics() {
+  const data = state.data, runs = data.runs || [];
+  const uniqueScenarios = new Set(runs.map((run) => run.scenario));
+  const adversarial = new Set(runs.filter((run) => String(run.scenario_type || run.category).startsWith("adversarial:")).map((run) => String(run.scenario_type || run.category)));
+  $("#metric-scenarios").textContent = data.suite_size ?? uniqueScenarios.size;
+  $("#metric-adversarial").textContent = adversarial.size || "4 classes";
+  $("#metric-replay").textContent = data.replay_failures === 0 ? "100%" : `${data.replay_failures} failed`;
+  $("#metric-replay-detail").textContent = data.replay_failures === 0 ? "all fingerprints reproduced" : "replay mismatches require review";
+  const history = data.history_regression || {};
+  $("#metric-regression").textContent = history.gate_pass === false ? "Regression" : "No regression";
+  $("#metric-baseline").textContent = history.baseline ? `vs ${history.baseline}` : "first recorded baseline";
+  const gatePassed = data.replay_failures === 0 && history.gate_pass !== false;
+  $("#gate-label").textContent = gatePassed ? "CI gate passed" : "CI gate blocked";
+  document.body.dataset.gate = gatePassed ? "passed" : "failed";
 }
 
-function indexSearchText() {
-  for (const r of state.data.runs) {
-    r._search = (r.scenario + " " + r.category + " " + r.failures.join(" ")).toLowerCase();
-  }
+function filteredRows() {
+  const query = state.filter.trim().toLowerCase();
+  return (state.data.runs || []).filter((run) => {
+    if (run.agent !== state.agent) return false;
+    const scenarioType = String(run.scenario_type || (String(run.category).startsWith("adversarial:") ? run.category : "realistic"));
+    if (state.type && !scenarioType.startsWith(state.type)) return false;
+    return !query || `${run.scenario} ${run.category} ${(run.failures || []).join(" ")}`.toLowerCase().includes(query);
+  });
 }
 
 function renderTable() {
-  const tbody = $("#runs-body");
-  const rows = state.visibleRows = rowsFor();
-  $("#count").textContent = `${rows.length} runs`;
-  if (!rows.length) {
-    state._pool = state._pool || [];
-    const emptyTr = el("tr", { "data-empty": "1" }, el("td", { colspan: "6" }, el("div", { class: "empty" }, "No runs match this filter.")));
-    tbody.replaceChildren(emptyTr);
-    return;
-  }
-  // In-place pooled rendering: reuse <tr> nodes across renders so filtering
-  // costs only property writes - keeps every keystroke well under budget.
-  const pool = state._pool || (state._pool = []);
-  while (pool.length < rows.length) {
-    const tr = document.createElement("tr");
-    tr.appendChild(el("td", { class: "mono" }));
-    tr.appendChild(el("td", {}));
-    tr.appendChild(el("td", {}));
-    tr.appendChild(el("td", {}));
-    tr.appendChild(el("td", { class: "num hide-m" }));
-    tr.appendChild(el("td", { class: "num hide-m" }));
-    tr.addEventListener("click", () => {
-      const idx = pool.indexOf(tr);
-      if (idx >= 0) selectRow(idx);
-    });
-    tbody.appendChild(tr);
-    pool.push(tr);
-  }
-  for (let i = 0; i < pool.length; i++) {
-    const tr = pool[i];
-    if (tr.parentNode !== tbody) {
-      // reattach after an empty render removed everything; keep order
-      if (tbody.firstElementChild && tbody.firstElementChild.dataset.empty === "1") {
-        tbody.replaceChildren();
-      }
-      tbody.appendChild(tr);
-    }
-    if (i < rows.length) {
-      const r = rows[i];
-      const [tdId, tdCat, tdOut, tdFail, tdCalls, tdMut] = tr.children;
-      tdId.textContent = r.scenario;
-      tdCat.textContent = r.category;
-      tdOut.className = "";
-      tdOut.replaceChildren(r.success ? el("span", { class: "ok-dot", title: "pass" }) : el("span", { class: "fail-dot", title: "fail" }));
-      tdFail.textContent = "";
-      if (r.failures.length) {
-        for (const k of r.failures) tdFail.appendChild(el("span", { class: "chip bad" }, k.replace(/_/g, " ")));
-      } else {
-        tdFail.appendChild(el("span", { class: "chip" }, "clean"));
-      }
-      tdCalls.textContent = String(r.calls);
-      tdMut.textContent = String(r.mutations);
-      tr.style.display = "";
-      tr.classList.toggle("selected", i === state.selected);
-      tr.setAttribute("aria-selected", String(i === state.selected));
-      tr.tabIndex = -1;
-      tr.dataset.i = String(i);
-    } else {
-      tr.style.display = "none";
-    }
-  }
+  const rows = state.visibleRows = filteredRows();
+  $("#count").textContent = `${rows.length} visible`;
+  if (!rows.length) { $("#runs-body").replaceChildren(element("tr", {}, element("td", { colspan: "6", class: "empty-state" }, "No runs match this view."))); return; }
+  $("#runs-body").replaceChildren(...rows.map((run, index) => {
+    const failures = run.failures || [];
+    const row = element("tr", { tabindex: "-1", "aria-selected": String(index === state.selected) },
+      element("td", { class: "mono" }, run.scenario), element("td", {}, titleCase(run.category)),
+      element("td", {}, element("span", { class: `outcome ${run.success ? "pass" : "fail"}` }, run.success ? "Pass" : "Fail")),
+      element("td", { class: "failure-cell" }, ...(failures.length ? failures.map((failure) => element("span", { class: `failure-chip ${failure}` }, titleCase(failure))) : [element("span", { class: "clean-label" }, "No finding")])),
+      element("td", { class: "number hide-mobile" }, String(run.calls ?? 0)),
+      element("td", { class: "hide-mobile" }, element("span", { class: `replay-check ${run.replay_verified === false ? "bad" : ""}` }, run.replay_verified === false ? "Mismatch" : "Verified")));
+    row.addEventListener("click", () => openDetails(index)); return row;
+  }));
 }
 
-function selectRow(i, openDrawer = false) {
-  const rows = state.visibleRows;
-  if (!rows.length) return;
-  state.selected = Math.max(0, Math.min(rows.length - 1, i));
-  const table = $("#runs-body");
-  [...table.children].forEach((tr, j) => tr.classList.toggle("selected", j === state.selected));
-  const sel = table.children[state.selected];
-  if (sel) {
-    sel.scrollIntoView({ block: "nearest" });
-    sel.focus({ preventScroll: true });
-  }
-  if (openDrawer) openDetail(rows[state.selected]);
+function renderTabs() {
+  const names = Object.keys(state.data.scorecards);
+  if (!state.agent || !state.data.scorecards[state.agent]) state.agent = names[0];
+  $("#tabs").replaceChildren(...names.map((name) => {
+    const button = element("button", { type: "button", role: "tab", "aria-selected": String(name === state.agent) }, titleCase(name));
+    button.addEventListener("click", () => { if (state.agent === name) return; state.agent = name; state.selected = -1; renderTabs(); renderSummary(); renderTable(); });
+    return button;
+  }));
 }
 
-function openDetail(r) {
-  const d = $("#drawer-root");
-  d.classList.add("open");
-  state._drawerReturnFocus = document.activeElement;
-  $("#d-close").focus();
-  $("#d-title").textContent = r.scenario;
-  $("#d-meta").textContent = `${r.agent} · ${r.category}`;
-  const kv = $("#d-kv");
-  kv.textContent = "";
-  const add = (k, v, mono = false) => {
-    kv.appendChild(el("dt", {}, k));
-    const dd = el("dd", {}, String(v));
-    if (mono) dd.classList.add("fp");
-    kv.appendChild(dd);
-  };
-  add("outcome", r.success ? "PASS" : "FAIL");
-  add("oracle reward", r.reward);
-  add("tool calls", r.calls);
-  add("state mutations", r.mutations);
-  add("failure modes", r.failures.length ? r.failures.join(", ").replace(/_/g, " ") : "none detected");
+function openDetails(index) {
+  const run = state.visibleRows[index]; if (!run) return;
+  state.selected = index;
+  state.returnFocus = document.activeElement;
+  const root = $("#drawer-root"); root.inert = false; root.classList.add("open"); root.setAttribute("aria-hidden", "false");
+  $("#d-title").textContent = run.scenario; $("#d-meta").textContent = `${titleCase(run.agent)} · ${titleCase(run.category)}`;
+  const pairs = [["Outcome", run.success ? "Pass" : "Fail"], ["Oracle reward", run.reward], ["Tool calls", run.calls ?? 0], ["State mutations", run.mutations ?? 0], ["Failure modes", (run.failures || []).length ? (run.failures || []).map(titleCase).join(", ") : "None"], ["Replay", run.replay_verified === false ? "Fingerprint mismatch" : "Verified"]];
+  $("#d-kv").replaceChildren(...pairs.flatMap(([key, value]) => [element("dt", {}, key), element("dd", {}, String(value))]));
+  $("#d-close").focus(); renderTable();
 }
+function closeDetails() { const root = $("#drawer-root"); root.classList.remove("open"); if (state.returnFocus?.focus) state.returnFocus.focus(); else $("#filter").focus(); root.inert = true; root.setAttribute("aria-hidden", "true"); }
 
-function closeDrawer() {
-  if (!$("#drawer-root").classList.contains("open")) return;
-  $("#drawer-root").classList.remove("open");
-  if (state._drawerReturnFocus && state._drawerReturnFocus.focus) state._drawerReturnFocus.focus();
-}
-
-/* ---------- interactions (all synchronous < 100ms) ---------- */
-function bind() {
-  $("#filter").addEventListener("input", (e) => {
-    state.filter = e.target.value;
-    state.selected = -1;
-    renderTable();
+function bindInteractions() {
+  $("#filter").addEventListener("input", (event) => { state.filter = event.target.value; state.selected = -1; renderTable(); });
+  $("#scenario-type").addEventListener("change", (event) => { state.type = event.target.value; state.selected = -1; renderTable(); });
+  $("#drawer-backdrop").addEventListener("click", closeDetails); $("#d-close").addEventListener("click", closeDetails);
+  $("#export-button").addEventListener("click", () => { const blob = new Blob([JSON.stringify(state.data, null, 2)], { type: "application/json" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "oosc-reliability-report.json"; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0); });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "/" && document.activeElement !== $("#filter")) { event.preventDefault(); $("#filter").focus(); return; }
+    if (event.key === "Escape") { closeDetails(); return; }
+    if (document.activeElement === $("#filter")) return;
+    if (event.key === "j" || event.key === "k") { event.preventDefault(); const delta = event.key === "j" ? 1 : -1; state.selected = Math.max(0, Math.min(state.visibleRows.length - 1, state.selected + delta)); renderTable(); const row = $("#runs-body").children[state.selected]; if (row) { row.focus(); row.scrollIntoView({ block: "nearest" }); } }
+    if (event.key === "Enter" && state.selected >= 0) openDetails(state.selected);
   });
-  $("#tabs").addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-agent]");
-    if (!btn || btn.dataset.agent === state.agent) return;
-    state.agent = btn.dataset.agent;
-    state.selected = -1;
-    for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.agent === state.agent));
-    closeDrawer();
-    renderSidebar();
-    renderTable();
-  });
-  $("#drawer-backdrop").addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "/" && document.activeElement !== $("#filter")) {
-      e.preventDefault(); $("#filter").focus(); return;
-    }
-    if (e.key === "Escape") { closeDrawer(); $("#filter").blur(); return; }
-    if (document.activeElement === $("#filter") && e.key !== "Enter") return;
-    if (e.key === "j") { e.preventDefault(); selectRow(Math.min(state.selected + 1, state.visibleRows.length - 1)); }
-    if (e.key === "k") { e.preventDefault(); selectRow(state.selected - 1); }
-    if (e.key === "Enter" && state.selected >= 0 && !$("#drawer-root").classList.contains("open")) {
-      openDetail(state.visibleRows[state.selected]);
-    }
-    if (e.key === "Enter" && $("#drawer-root").classList.contains("open")) closeDrawer();
-  });
-}
-
-function buildTabs() {
-  const tabs = $("#tabs");
-  tabs.textContent = "";
-  for (const name of Object.keys(state.data.scorecards)) {
-    tabs.appendChild(el("button", { role: "tab", "data-agent": name, "aria-selected": String(name === state.agent) },
-      name.replace(/-/g, " ")));
-  }
 }
 
 async function init() {
-  let data;
-  try {
-    data = window.__SCORECARD__ || await (await fetch("data/scorecard.json")).json();
-  } catch {
-    data = window.__SCORECARD__;
-  }
-  state.data = data;
-  indexSearchText();
-  $("#generated").textContent = new Date(data.generated_at).toLocaleString();
-  $("#replay").textContent = `replay verified · ${data.replay_failures} failures`;
-  buildTabs();
-  renderSidebar();
-  renderTable();
-  bind();
-  // Warm the filter path once at startup so the first user keystroke pays no
-  // JIT/layout cost: render, revert, yield a frame.
-  requestAnimationFrame(() => {
-    const f = $("#filter");
-    f.value = "~warmup";
-    f.dispatchEvent(new Event("input", { bubbles: true }));
-    f.value = "";
-    f.dispatchEvent(new Event("input", { bubbles: true }));
-  });
-  document.body.dataset.ready = "1";
+  try { const response = await fetch("data/ci-report.json", { cache: "no-store" }); if (!response.ok) throw new Error(`Report request failed: ${response.status}`); state.data = await response.json(); }
+  catch (error) { document.body.innerHTML = `<main class="load-error"><h1>Report unavailable</h1><p>${error.message}</p><p>Run the OOSC CI command to generate <code>ui/data/ci-report.json</code>.</p></main>`; return; }
+  $("#generated").textContent = new Date(state.data.generated_at || Date.now()).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+  renderTabs(); renderSummary(); renderTopMetrics(); renderTable(); bindInteractions(); document.body.dataset.ready = "true";
 }
-
 init();

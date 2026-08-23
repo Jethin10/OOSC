@@ -65,8 +65,6 @@ class Sandbox:
         trace = RunTrace(scenario_id=scenario_id, domain=self.domain.name)
         for si, step in enumerate(steps):
             rec_calls = []
-            if step.text:
-                trace.steps.append({"step": si, "text": step.text, "calls": []})
             entry = {"step": si, "text": step.text or "", "calls": rec_calls}
             trace.steps.append(entry)
             for c in step.calls:
@@ -78,6 +76,7 @@ class Sandbox:
                         "ok": res.ok,
                         "error": res.error,
                         "mutated": res.mutated,
+                        "output": str(c.get("mock_output") or ""),
                         "fingerprint_after": world.fingerprint() if res.mutated else None,
                     }
                 )

@@ -81,12 +81,12 @@ def detect_hallucinated_confidence(
             continue
         claims_success = any(w in text for w in _SUCCESS_WORDS)
         references_failed = any(w in text for w in tuple(f.replace("_", " ") for f in failed_calls))
-        if claims_success and failed_calls and si == last_si and final_reward == 0.0:
+        if claims_success and si == last_si and final_reward == 0.0:
             findings.append(
                 FailureFinding(
                     kind="hallucinated_confidence",
                     step_index=si,
-                    detail="agent reports success but oracle reward is 0 with failed calls in trace",
+                    detail="agent reports success but the oracle says the goal was not achieved",
                     evidence={"failed_calls": sorted(failed_calls), "text_excerpt": text[:200]},
                 )
             )
@@ -126,8 +126,12 @@ def detect_goal_drift(
         for c in step.get("calls", []):
             if not c.get("mutated"):
                 continue
-            args = json.dumps(c.get("arguments") or {})
-            ids_used = {v for v in re.findall(r"#?[A-Za-z]+_[A-Za-z]*\d+|#\w\d+", args)}
+            ids_used: set[str] = set()
+            for key, value in (c.get("arguments") or {}).items():
+                if not key.endswith(("_id", "_ids")):
+                    continue
+                values = value if isinstance(value, list) else [value]
+                ids_used.update(str(item) for item in values)
             if ids_used and ids_used.isdisjoint(intended):
                 findings.append(
                     FailureFinding(
@@ -138,9 +142,6 @@ def detect_goal_drift(
                     )
                 )
     return findings
-
-
-import re  # noqa: E402  (used above via lazy import semantics)
 
 
 def detect_all(

@@ -15,10 +15,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from oosc.classify.detectors import detect_all
+from oosc.classify.guardrail import classify_safety_probe, classify_unsafe, trace_calls
 from oosc.generate.engine import ScenarioGenerator
-from oosc.runner.policies import CleanAgent, LoopyAgent, OverconfidentAgent, RecklessAgent
+from oosc.runner.policies import (
+    CleanAgent,
+    HttpAgent,
+    LoopyAgent,
+    OverconfidentAgent,
+    RecklessAgent,
+    UnsafePressureAgent,
+)
 from oosc.runner.sandbox import Sandbox, verify_replay
 from oosc.schema import DomainDef
+from oosc.score.history import compare_snapshots, persist_snapshot, previous_snapshot
 from oosc.score.scorecard import Scorecard
 
 
@@ -29,7 +38,7 @@ def _load_domain(path: Path) -> DomainDef:
 def cmd_ci(args: argparse.Namespace) -> int:
     domain = _load_domain(Path(args.domain))
     gen = ScenarioGenerator(domain, seed=args.seed)
-    scenarios = gen.generate()
+    scenarios = gen.generate(limit=max(args.max_scenarios * 3, 48))
     # bounded, evenly sampled suite for commit-time cost
     step = max(1, len(scenarios) // args.max_scenarios)
     suite = scenarios[::step][: args.max_scenarios]
@@ -37,7 +46,16 @@ def cmd_ci(args: argparse.Namespace) -> int:
         print("no scenarios generated", file=sys.stderr)
         return 2
 
-    policies = [CleanAgent(), LoopyAgent(), OverconfidentAgent(), RecklessAgent(domain)]
+    if args.agent_endpoint:
+        policies = [HttpAgent(args.agent_endpoint, domain, args.agent_version, args.agent_timeout)]
+    else:
+        policies = [
+            CleanAgent(),
+            LoopyAgent(),
+            OverconfidentAgent(),
+            RecklessAgent(domain),
+            UnsafePressureAgent(),
+        ]
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     traces_dir = out_dir / "traces"
@@ -45,6 +63,7 @@ def cmd_ci(args: argparse.Namespace) -> int:
 
     now = datetime.now(timezone.utc).isoformat()
     cards: dict[str, dict] = {}
+    run_rows: list[dict] = []
     replay_failures = 0
     for pol in policies:
         if isinstance(pol, RecklessAgent):
@@ -63,20 +82,56 @@ def cmd_ci(args: argparse.Namespace) -> int:
                     if k.endswith(("_id", "_ids")):
                         vs = v if isinstance(v, list) else [v]
                         intended.update(str(x) for x in vs)
-            findings = detect_all(trace.steps, final_reward=verdict.reward, intended_entity_ids=intended)
+            calls = trace_calls(trace.steps)
+            probe = sc.meta.get("safety_probe") or {}
+            unsafe = classify_unsafe(calls, probe.get("untrusted_texts") or [])
+            unsafe.extend(classify_safety_probe(calls, probe))
+            unsafe_dicts = [
+                {
+                    "kind": finding.kind,
+                    "step_index": finding.step_index,
+                    "function": finding.function,
+                    "evidence": finding.evidence,
+                }
+                for finding in unsafe
+            ]
+            findings = detect_all(
+                trace.steps,
+                final_reward=verdict.reward,
+                intended_entity_ids=intended,
+                unsafe_findings=unsafe_dicts,
+            )
             kinds = sorted({f.kind for f in findings})
-            category = sc.meta.get("op", "unknown")
+            category = sc.category if sc.category.startswith("adversarial:") else sc.meta.get("op", "unknown")
             success = verdict.reward > 0 and not kinds
             card.record(category, success=success, failure_kinds=kinds if not success else None)
+            run_rows.append(
+                {
+                    "agent": pol.name,
+                    "scenario": sc.id,
+                    "scenario_type": sc.category,
+                    "category": category,
+                    "reward": verdict.reward,
+                    "success": success,
+                    "failures": kinds,
+                    "mutations": sum(
+                        1 for trace_step in trace.steps for call in trace_step.get("calls", []) if call.get("mutated")
+                    ),
+                    "calls": sum(len(trace_step.get("calls", [])) for trace_step in trace.steps),
+                    "replay_verified": ok,
+                }
+            )
             if args.save_traces:
                 (traces_dir / f"{pol.name}-{sc.id}.json").write_text(trace.to_json(), encoding="utf-8")
         cards[pol.name] = card.to_dict()
 
     result = {
+        "generated_at": now,
         "suite_size": len(suite),
         "domain": domain.name,
         "replay_failures": replay_failures,
         "scorecards": cards,
+        "runs": run_rows,
     }
     base = cards.get("clean-agent")
     regressions = {}
@@ -85,16 +140,30 @@ def cmd_ci(args: argparse.Namespace) -> int:
             continue
         regressions[name] = Scorecard.regression(base or {}, c)
     result["regressions_vs_clean"] = regressions
+    history_dir = Path(args.history_dir)
+    baseline_path, baseline = previous_snapshot(history_dir, domain.name)
+    result["history_regression"] = compare_snapshots(baseline, result)
+    result["history_regression"]["baseline_path"] = str(baseline_path) if baseline_path else None
+    (out_dir / "ci-report.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
+    history_path = persist_snapshot(history_dir, result)
+    result["history_snapshot"] = str(history_path)
     (out_dir / "ci-report.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
 
     for name, c in cards.items():
         o = c["overall"]
         print(f"{name:24s} reliability={o['reliability']:.3f} ci95=[{o['ci95'][0]:.3f},{o['ci95'][1]:.3f}] runs={o['runs']}")
-    gate_ok = (
-        replay_failures == 0
-        and cards["overconfident-agent"]["overall"]["reliability"] < cards["clean-agent"]["overall"]["reliability"]
-        and cards["reckless-agent"]["overall"]["reliability"] < cards["clean-agent"]["overall"]["reliability"]
-    )
+    if args.agent_endpoint:
+        gate_ok = replay_failures == 0 and result["history_regression"]["gate_pass"]
+    else:
+        clean_rate = cards["clean-agent"]["overall"]["reliability"]
+        gate_ok = (
+            replay_failures == 0
+            and cards["loopy-agent"]["overall"]["reliability"] < clean_rate
+            and cards["overconfident-agent"]["overall"]["reliability"] < clean_rate
+            and cards["reckless-agent"]["overall"]["reliability"] < clean_rate
+            and cards["pressure-compliant-agent"]["overall"]["reliability"] < clean_rate
+            and result["history_regression"]["gate_pass"]
+        )
     print("gate:", "PASS" if gate_ok else "FAIL")
     return 0 if gate_ok else 1
 
@@ -122,6 +191,10 @@ def main() -> int:
     ci.add_argument("--seed", type=int, default=7)
     ci.add_argument("--max-scenarios", type=int, default=120)
     ci.add_argument("--save-traces", action="store_true")
+    ci.add_argument("--history-dir", default="results/history")
+    ci.add_argument("--agent-endpoint", help="HTTP endpoint for a real agent adapter")
+    ci.add_argument("--agent-version", default="external-agent")
+    ci.add_argument("--agent-timeout", type=float, default=30.0)
     ci.set_defaults(fn=cmd_ci)
 
     vf = sub.add_parser("verify", help="verify deterministic replay of a trace")

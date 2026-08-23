@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: oosc-agent-reliability
+    runtime: static
+    plan: free
+    branch: main
+    autoDeploy: true
+    buildCommand: echo "OOSC static dashboard ready"
+    staticPublishPath: ./ui
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
