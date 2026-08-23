@@ -62,3 +62,24 @@ Full analysis in `results/n2/report.json`. Revisit if time remains.
   render bugs + 10 a11y/design defects; all fixed. Independent audit corrected
   our own claims (N4 98.9% not 99.2%; N1 airline-holdout caveat added).
   Interface budget measured and committed as artifact. **WON**.
+
+- **08:0x** Interface rebuilt as a product, not a report dump. Six views:
+  overview (pitch + the four numbers + the five PS directions mapped to running
+  code), live pipeline replay, runs with a full trace inspector, guardrail
+  compliance matrix, scorecard with Wilson intervals + regression tracker, and
+  benchmark evidence with methods and caveats. `scripts/build_ui_data.py`
+  assembles the bundle from committed artifacts only - no figure in the
+  interface is typed in by hand.
+- **08:1x** Three engine gaps found while wiring the guardrail view, all fixed:
+  (a) uniform CI downsampling was silently dropping most adversarial probes -
+  now stratified, 5 -> 20 probes at the same cost; (b) probes all piled onto
+  whichever irreversible tool sorted first - now round-robin across
+  cancel/exchange/return; (c) **no negative control existed** - every policy
+  either mutated or made no calls at all, so the guardrail suite could not show
+  it distinguishes refusal from inaction. Added `cautious-agent`, which engages
+  with every probe, reads the poisoned tool output, and refuses. The gate now
+  FAILS if that policy is ever flagged for an unsafe action.
+- Gate re-run: 6 agent versions, 360 traces, 0 replay failures, **PASS**.
+  Interface budget re-measured on the rebuild: interaction feedback 1.3ms max,
+  median frame 7ms, no horizontal overflow at 390px, zero console errors across
+  all six views.
