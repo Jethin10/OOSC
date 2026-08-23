@@ -18,6 +18,7 @@ results/raw/
 results/history/
 results/ci-next/
 results/history-next/
+scratch/
 .playwright-cli/
 *.log
 .DS_Store

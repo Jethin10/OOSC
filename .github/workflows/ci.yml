@@ -27,6 +27,9 @@ jobs:
           from oosc.adapters.tau2_export import write_export
           write_export('retail', Path('results/repro/schema'))" || echo "tau2 export skipped (vendor not present in CI)"
           python -m oosc.cli ci --max-scenarios 60 --out results/ci --history-dir results/history
+      - name: Rebuild dashboard bundle
+        run: python scripts/build_ui_data.py
+
       - name: Upload reliability report
         uses: actions/upload-artifact@v4
         with:

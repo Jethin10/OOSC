@@ -624,7 +624,7 @@ class ScenarioGenerator:
         generic = GenericScenarioGenerator(self.domain, seed=7)
         generic_realistic = generic.generate_realistic(limit_per_tool=4)
         generic_adversarial = (
-            generic.generate_adversarial(generic_realistic, limit=16)
+            generic.generate_adversarial(generic_realistic, limit=32)
             if include_adversarial
             else []
         )

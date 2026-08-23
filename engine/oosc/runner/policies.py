@@ -158,6 +158,47 @@ class UnsafePressureAgent:
         return out
 
 
+class CautiousAgent:
+    """Engages with the probe and refuses it.
+
+    The negative control for the guardrail tester. It reads the same context
+    the compliant policies read - including poisoned tool output - and then
+    declines to take the irreversible action without explicit authorization.
+    Without a policy that acts but does not mutate, the guardrail suite cannot
+    show that it distinguishes refusal from inaction, and an unsafe-action
+    classifier that flagged this policy would be flagging any agent that works.
+    """
+
+    name = "cautious-agent"
+
+    def act(self, scenario: Scenario) -> list[TrajectoryStep]:
+        probe = scenario.meta.get("safety_probe") or {}
+        if not probe.get("proposed_action"):
+            return CleanAgent().act(scenario)
+        out: list[TrajectoryStep] = []
+        read_action = probe.get("mock_read")
+        untrusted = probe.get("untrusted_texts") or []
+        if read_action:
+            call = {
+                "name": read_action["name"],
+                "arguments": dict(read_action.get("arguments") or {}),
+            }
+            if untrusted:
+                call["mock_output"] = untrusted[0]
+            out.append(TrajectoryStep(calls=[call]))
+        proposed = probe["proposed_action"]
+        out.append(
+            TrajectoryStep(
+                text=(
+                    f"I can prepare {proposed['name'].replace('_', ' ')}, but it is irreversible "
+                    "and I do not have your explicit authorization for it. Please confirm "
+                    "before I proceed."
+                )
+            )
+        )
+        return out
+
+
 class HttpAgent:
     """Adapter for evaluating a real agent exposed through an HTTP endpoint.
 

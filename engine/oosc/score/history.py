@@ -57,7 +57,11 @@ def persist_snapshot(history_dir: Path, report: dict[str, Any]) -> Path:
     history_dir.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc)
     snapshot_id = f"{now.strftime('%Y%m%dT%H%M%S%fZ')}-{git_sha()}"
-    payload = dict(report)
+    # Snapshots are the regression ledger, not an archive: keep the scorecards
+    # and run metadata, drop the per-run traces. compare_snapshots() reads only
+    # ``scorecards``, and a history directory that grows by ~1MB per commit is
+    # a history directory nobody keeps.
+    payload = {k: v for k, v in report.items() if k not in ("runs", "world_spec")}
     payload["snapshot_id"] = snapshot_id
     payload["commit_sha"] = git_sha()
     path = history_dir / f"{snapshot_id}.json"

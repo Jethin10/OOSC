@@ -3,77 +3,289 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OOSC continuously stress-tests autonomous agents before they reach production.">
+  <meta name="description" content="OOSC is continuous integration for autonomous agents: it derives a mock world from tool schemas, generates adversarial scenarios, runs the agent sandboxed, classifies why it failed, and gates the commit.">
+  <meta name="color-scheme" content="dark">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <title>OOSC — Agent Reliability</title>
+  <title>OOSC — Agent Reliability Engine</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="OOSC home"><span class="mark" aria-hidden="true"></span><strong>OOSC</strong></a>
-    <span class="product-name">Agent Reliability</span><span class="topbar-spacer"></span>
+    <a class="brand" href="#overview" aria-label="OOSC home"><span class="mark" aria-hidden="true"></span><strong>OOSC</strong></a>
+    <span class="product-name">Agent Reliability Engine</span>
+    <span class="topbar-spacer"></span>
+    <span class="chip hide-mobile">domain <b id="chip-domain">—</b></span>
     <span class="status-badge"><span class="status-dot"></span><span id="gate-label">CI gate</span></span>
     <button class="button" id="export-button" type="button">Export report</button>
   </header>
+
   <main class="shell">
-    <aside class="sidebar">
-      <div class="sidebar-section score-block">
-        <div class="eyebrow">Overall reliability</div>
+    <aside class="rail">
+      <div class="rail-section rail-nav">
+        <div class="section-label">Report</div>
+        <nav id="nav" aria-label="Report sections"></nav>
+      </div>
+
+      <div class="rail-section">
+        <div class="section-label">Baseline reliability</div>
         <div class="score"><span id="overall-rate">—</span><small>/ 100</small></div>
-        <div class="muted" id="overall-runs">Loading evaluation…</div>
+        <div class="muted" id="overall-runs" style="font-size:11.5px">Loading evaluation…</div>
         <div class="ci-track" aria-label="95% confidence interval"><i id="overall-ci"></i></div>
+        <div class="faint" id="overall-ci-label" style="font-size:10.5px;margin-top:7px"></div>
       </div>
-      <div class="sidebar-section"><div class="section-label">Coverage by category</div><div class="category-list" id="cats"></div></div>
-      <div class="sidebar-section capabilities">
-        <div class="section-label">Evaluation stack</div>
-        <div class="capability"><span>Scenario generation</span><b>Schema-driven</b></div>
-        <div class="capability"><span>Adversarial probes</span><b>4 classes</b></div>
-        <div class="capability"><span>Sandbox + replay</span><b>Verified</b></div>
-        <div class="capability"><span>Failure taxonomy</span><b>4 / 4 live</b></div>
-        <div class="capability"><span>Regression history</span><b>Persistent</b></div>
+
+      <div class="rail-section">
+        <div class="section-label">Suite</div>
+        <div id="rail-stats" style="margin-top:10px"></div>
       </div>
-      <div class="sidebar-section"><div class="section-label">Detected failure modes</div><div class="legend" id="legend"></div></div>
+
+      <div class="rail-section">
+        <div class="section-label" id="legend-label">Failure modes</div>
+        <div class="legend" id="legend"></div>
+      </div>
     </aside>
+
     <section class="content">
-      <div class="report-heading">
-        <div><h1>Reliability report</h1><p>Every result is grounded in a sandboxed, deterministically replayable agent run.</p></div>
-        <div class="timestamp"><span>Generated</span><strong id="generated">—</strong></div>
-      </div>
-      <div class="metrics" aria-label="Evaluation summary">
-        <article><span>Scenarios</span><strong id="metric-scenarios">—</strong><small>realistic + adversarial</small></article>
-        <article><span>Adversarial coverage</span><strong id="metric-adversarial">—</strong><small>pressure, ambiguity, conflict, injection</small></article>
-        <article><span>Replay integrity</span><strong id="metric-replay">—</strong><small id="metric-replay-detail">fingerprint checks</small></article>
-        <article><span>Baseline regression</span><strong id="metric-regression">—</strong><small id="metric-baseline">cross-commit history</small></article>
-      </div>
-      <div class="workspace">
-        <div class="workspace-title">
-          <div><h2>Evaluation runs</h2><span id="count" class="muted"></span></div>
-          <div class="tabs" id="tabs" role="tablist" aria-label="Agent versions"></div>
+
+      <!-- ---------------------------------------------------------- overview -->
+      <div class="view" id="view-overview">
+        <div class="hero">
+          <div>
+            <h1>Agents fail in production for reasons<br class="hide-mobile">a handful of test prompts never find.</h1>
+            <p class="lede">
+              OOSC is <strong>continuous integration for autonomous agents</strong>. Point it at an
+              agent's tool schemas and it derives a stateful mock world with no hand-authored
+              domain logic, generates realistic and adversarial scenarios against that world, runs
+              the agent sandboxed with every state mutation fingerprinted, classifies <em>why</em>
+              each run failed, and blocks the commit when reliability regresses.
+            </p>
+            <div class="hero-actions">
+              <button class="button primary" type="button" data-goto="pipeline">Watch a run &rarr;</button>
+              <button class="button" type="button" data-goto="evidence">See the benchmark evidence</button>
+            </div>
+          </div>
+          <div class="gate-card">
+            <div class="gate-line"><span class="status-dot"></span><span id="gate-headline">Evaluating…</span></div>
+            <p class="faint" style="font-size:11.5px;margin-top:8px" id="gate-detail"></p>
+            <div class="gate-grid" id="gate-grid"></div>
+          </div>
         </div>
-        <div class="toolbar">
-          <label class="search-wrap" for="filter">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4"></path></svg>
-            <input type="search" id="filter" placeholder="Search scenarios and failures" spellcheck="false"><kbd>/</kbd>
-          </label>
-          <label class="sr-only" for="scenario-type">Scenario type</label>
-          <select id="scenario-type"><option value="">All scenario types</option><option value="realistic">Realistic</option><option value="adversarial">Adversarial</option></select>
+
+        <div class="block">
+          <div class="block-head">
+            <h2 class="block-title">Validated against four external benchmarks</h2>
+            <p>every figure read from a committed artifact</p>
+          </div>
+          <div class="evidence-grid" id="evidence-cards"></div>
         </div>
-        <div class="table-wrap">
-          <table><caption class="sr-only">Agent evaluation runs</caption>
-            <thead><tr><th scope="col">Scenario</th><th scope="col">Category</th><th scope="col">Outcome</th><th scope="col">Failure modes</th><th scope="col" class="hide-mobile">Calls</th><th scope="col" class="hide-mobile">Replay</th></tr></thead>
-            <tbody id="runs-body"></tbody>
-          </table>
+
+        <div class="block">
+          <div class="block-head">
+            <h2 class="block-title">The five directions in the problem statement</h2>
+            <p>what was asked &rarr; what is running</p>
+          </div>
+          <div class="directions" id="directions"></div>
         </div>
       </div>
+
+      <!-- ---------------------------------------------------------- pipeline -->
+      <div class="view" id="view-pipeline" hidden>
+        <div class="view-head">
+          <div>
+            <h1>Evaluation pipeline</h1>
+            <p>
+              Six stages, from tool schemas to a gated commit. Press replay to step the
+              committed CI run through them — every line below is read from the recorded
+              trace, which is the same mechanism that proves the run is replayable.
+            </p>
+          </div>
+          <div class="timestamp"><span>Suite seed</span><strong id="pipe-seed">—</strong></div>
+        </div>
+
+        <div class="block">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Deterministic replay</h2><span class="muted" id="pipe-status">idle</span></div>
+              <div style="display:flex;gap:8px">
+                <select id="pipe-agent" aria-label="Agent version to replay"></select>
+                <button class="button primary" id="pipe-run" type="button">Replay run</button>
+              </div>
+            </div>
+            <div class="stages" id="stages"></div>
+            <div class="console" id="console" role="log" aria-live="polite" aria-label="Replay log"></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <h2 class="block-title">Derived world model</h2>
+            <p id="spec-note">inferred from tool schemas and initial state only</p>
+          </div>
+          <div class="spec-grid" id="spec-grid"></div>
+        </div>
+      </div>
+
+      <!-- -------------------------------------------------------------- runs -->
+      <div class="view" id="view-runs" hidden>
+        <div class="view-head">
+          <div>
+            <h1>Runs and failure taxonomy</h1>
+            <p>
+              Every run is a replayable trace. Open one to see the exact tool calls, the world
+              fingerprint after each mutation, and the evidence behind every classification.
+            </p>
+          </div>
+          <div class="timestamp"><span>Generated</span><strong id="generated">—</strong></div>
+        </div>
+
+        <div class="block">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Evaluation runs</h2><span class="muted" id="count"></span></div>
+              <div class="tabs" id="tabs" role="tablist" aria-label="Agent versions"></div>
+            </div>
+            <div class="toolbar">
+              <label class="search-wrap" for="filter">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4"></path></svg>
+                <input type="search" id="filter" placeholder="Search scenarios and failures" spellcheck="false"><kbd>/</kbd>
+              </label>
+              <label class="sr-only" for="scenario-type">Scenario type</label>
+              <select id="scenario-type">
+                <option value="">All scenario types</option>
+                <option value="realistic">Realistic</option>
+                <option value="adversarial">Adversarial</option>
+              </select>
+              <label class="sr-only" for="outcome-filter">Outcome</label>
+              <select id="outcome-filter">
+                <option value="">All outcomes</option>
+                <option value="fail">Failures only</option>
+                <option value="pass">Passes only</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <caption class="sr-only">Agent evaluation runs</caption>
+                <thead><tr>
+                  <th scope="col">Scenario</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Outcome</th>
+                  <th scope="col">Failure modes</th>
+                  <th scope="col" class="hide-mobile">Calls</th>
+                  <th scope="col" class="hide-mobile">Mutations</th>
+                  <th scope="col" class="hide-mobile">Replay</th>
+                </tr></thead>
+                <tbody id="runs-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- -------------------------------------------------------- guardrails -->
+      <div class="view" id="view-guardrails" hidden>
+        <div class="view-head">
+          <div>
+            <h1>Destructive action guardrails</h1>
+            <p>
+              Irreversible operations are identified from the derived world spec, then probed
+              under four escalations. A probe carries no authorization: any agent that executes
+              the mutation has failed it, and the mutation is verified in real world state.
+            </p>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="control-readout" id="control-readout"></div>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <h2 class="block-title">Compliance matrix</h2>
+            <p><span class="verdict complied">complied</span> executed the irreversible action &nbsp; <span class="verdict held">held</span> acted without it &nbsp; <span class="verdict na">inert</span> made no calls at all</p>
+          </div>
+          <div class="panel"><div class="matrix-wrap"><table class="matrix" id="matrix"></table></div></div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 class="block-title">Probe classes</h2><p>the pressure applied, and what it targeted</p></div>
+          <div class="probe-cards" id="probe-cards"></div>
+        </div>
+      </div>
+
+      <!-- --------------------------------------------------------- scorecard -->
+      <div class="view" id="view-scorecard" hidden>
+        <div class="view-head">
+          <div>
+            <h1>Reliability scorecard</h1>
+            <p>
+              Reliability is a rate with a Wilson 95% interval, never a single pass or fail. A
+              regression gates the build only when the interval of the candidate clears the
+              interval of the baseline, so seed noise cannot fail a commit.
+            </p>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 class="block-title">Agent versions</h2><p>rate, interval, and the failure modes each one exhibits</p></div>
+          <div class="cards" id="version-cards"></div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 class="block-title">Reliability by task category</h2><p>darker is worse; the gate reads this grid, not the headline number</p></div>
+          <div class="panel"><div class="matrix-wrap" style="padding:6px 4px"><table class="heat" id="heat"></table></div></div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 class="block-title">Regression tracker</h2><p id="regression-note">across persisted CI snapshots</p></div>
+          <div class="panel">
+            <div class="panel-body"><svg class="trend" id="trend" role="img" aria-label="Reliability across CI snapshots"></svg><div class="trend-legend" id="trend-legend"></div></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 class="block-title">Category deltas vs baseline</h2><p id="delta-note"></p></div>
+          <div class="delta-list" id="deltas"></div>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- evidence -->
+      <div class="view" id="view-evidence" hidden>
+        <div class="view-head">
+          <div>
+            <h1>Benchmark evidence</h1>
+            <p>
+              Four numbers against external benchmarks, each reproducible from one command.
+              The one that did not clear its bar is published unmet rather than redefined.
+            </p>
+          </div>
+        </div>
+        <div class="block" id="benchmarks"></div>
+      </div>
+
     </section>
   </main>
-  <footer class="footer"><span><kbd>j</kbd><kbd>k</kbd> navigate</span><span><kbd>enter</kbd> inspect trace</span><span><kbd>esc</kbd> close</span><a href="https://github.com/Jethin10/OOSC" target="_blank" rel="noreferrer">View source ↗</a></footer>
-  <div id="drawer-root" aria-hidden="true" inert><div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+  <footer class="footer">
+    <span><kbd>1</kbd>–<kbd>6</kbd> sections</span>
+    <span><kbd>j</kbd><kbd>k</kbd> navigate</span>
+    <span><kbd>enter</kbd> inspect trace</span>
+    <span><kbd>esc</kbd> close</span>
+    <a href="https://github.com/Jethin10/OOSC" target="_blank" rel="noreferrer">View source ↗</a>
+  </footer>
+
+  <div id="drawer-root" aria-hidden="true" inert>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
     <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="d-title">
-      <button id="d-close" class="icon-button" aria-label="Close details" type="button">×</button><div class="eyebrow">Replayable trace</div><h2 id="d-title"></h2><div class="drawer-meta" id="d-meta"></div><dl class="kv" id="d-kv"></dl>
-      <div class="trace-note"><span class="status-dot"></span><p>This run can be re-executed against a fresh derived world with fingerprint verification after every mutation.</p></div>
+      <div class="drawer-top">
+        <button id="d-close" class="icon-button" aria-label="Close details" type="button">&times;</button>
+        <div class="eyebrow">Replayable trace</div>
+        <h2 id="d-title"></h2>
+        <div class="drawer-meta" id="d-meta"></div>
+      </div>
+      <div class="drawer-scroll" id="d-scroll"></div>
     </aside>
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>
