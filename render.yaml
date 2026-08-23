@@ -2,7 +2,6 @@ services:
   - type: web
     name: oosc-agent-reliability
     runtime: static
-    plan: free
     branch: main
     autoDeploy: true
     buildCommand: echo "OOSC static dashboard ready"
