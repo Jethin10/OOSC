@@ -23,10 +23,10 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def history_series() -> list[dict]:
+def history_series(dirname: str = "history") -> list[dict]:
     """One point per persisted CI snapshot, oldest first."""
     points = []
-    for path in sorted((RESULTS / "history").glob("*.json")):
+    for path in sorted((RESULTS / dirname).glob("*.json")):
         try:
             snap = load(path)
         except (OSError, json.JSONDecodeError):
@@ -244,21 +244,50 @@ DIRECTIONS = [
 ]
 
 
-def main() -> int:
-    ci = load(RESULTS / "ci" / "ci-report.json")
-    history = history_series()
-    gate_pass = ci.get("replay_failures", 0) == 0 and ci.get("history_regression", {}).get(
-        "gate_pass", True
-    )
+DOMAINS = [
+    {
+        "id": "retail",
+        "report": "ci",
+        "history": "history",
+        "label": "Retail",
+        "origin": "tau2-bench",
+        "note": "The domain the four benchmark numbers were measured against. "
+                "16 tools, 1,550 records.",
+        "unseen": False,
+    },
+    {
+        "id": "cloudops",
+        "report": "demo",
+        "history": "history-demo",
+        "label": "Cloud Ops",
+        "origin": "never seen before",
+        "note": "An incident-response agent OOSC was never built against. Nothing in "
+                "engine/ mentions services, snapshots or API keys — the entire test "
+                "world here was derived from its tool schemas at run time.",
+        "unseen": True,
+    },
+]
 
-    bundle = {
+
+def domain_payload(spec: dict) -> dict | None:
+    path = RESULTS / spec["report"] / "ci-report.json"
+    if not path.exists():
+        return None
+    ci = load(path)
+    gate = ci.get("replay_failures", 0) == 0 and ci.get("history_regression", {}).get("gate_pass", True)
+    return {
+        "id": spec["id"],
+        "label": spec["label"],
+        "origin": spec["origin"],
+        "note": spec["note"],
+        "unseen": spec["unseen"],
         "generated_at": ci["generated_at"],
         "domain": ci["domain"],
         "seed": ci.get("seed"),
         "suite_size": ci["suite_size"],
         "replay_failures": ci["replay_failures"],
         "replay_checks": ci.get("replay_checks", len(ci["runs"])),
-        "gate_pass": gate_pass,
+        "gate_pass": gate,
         "world_spec": ci.get("world_spec", {}),
         "generation": ci.get("generation", {}),
         "taxonomy": ci.get("taxonomy", []),
@@ -267,18 +296,27 @@ def main() -> int:
         "runs": ci["runs"],
         "regressions_vs_clean": ci.get("regressions_vs_clean", {}),
         "history_regression": ci.get("history_regression", {}),
-        "history": history,
+        "history": history_series(spec["history"]),
+    }
+
+
+def main() -> int:
+    domains = [d for d in (domain_payload(spec) for spec in DOMAINS) if d]
+    if not domains:
+        raise SystemExit("no CI reports found - run `oosc ci` first")
+
+    bundle = {
+        "generated_at": domains[0]["generated_at"],
+        "domains": domains,
         "benchmarks": benchmarks(),
         "directions": DIRECTIONS,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(bundle, separators=(",", ":")), encoding="utf-8")
-    size = OUT.stat().st_size
-    print(f"wrote {OUT.relative_to(ROOT)}  {size / 1024:.0f} KB")
-    print(
-        f"  {len(bundle['runs'])} runs, {len(bundle['scorecards'])} agent versions, "
-        f"{len(history)} history snapshots, {len(bundle['benchmarks'])} benchmarks"
-    )
+    print(f"wrote {OUT.relative_to(ROOT)}  {OUT.stat().st_size / 1024:.0f} KB")
+    for d in domains:
+        print(f"  {d['id']:10s} {len(d['runs']):4d} runs, {len(d['scorecards'])} versions, "
+              f"{len(d['history'])} snapshots, gate {'PASS' if d['gate_pass'] else 'FAIL'}")
     return 0
 
 

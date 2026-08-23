@@ -23,7 +23,7 @@
   <a class="brand" href="#overview"><span class="mark" aria-hidden="true"></span><span>OOSC</span></a>
   <nav id="nav" aria-label="Sections"></nav>
   <span class="spacer"></span>
-  <span class="pill pill--domain hide-sm">domain&nbsp;<b id="chip-domain">—</b></span>
+  <div class="segmented segmented--domain hide-sm" id="domain-switch" role="tablist" aria-label="Evaluated domain"></div>
   <span class="pill"><span class="dot"></span><span id="gate-label">CI gate</span></span>
   <button class="btn btn--ghost btn--icon theme-toggle" id="theme-toggle" type="button" aria-label="Toggle colour theme"></button>
   <button class="btn hide-sm" id="export" type="button">Export</button>
@@ -46,9 +46,13 @@
           blocks the commit when reliability regresses.
         </p>
         <div class="hero-actions reveal">
-          <button class="btn btn--primary" type="button" data-goto="pipeline">Watch a run</button>
+          <button class="btn btn--primary" type="button" id="hero-run">
+            <span class="btn__pulse" aria-hidden="true"></span>Run the evaluation
+          </button>
           <button class="btn" type="button" data-goto="evidence">Read the evidence</button>
         </div>
+
+        <div class="domain-note reveal" id="domain-note"></div>
 
         <dl class="gate-strip reveal" id="gate-strip"></dl>
       </div>
@@ -195,6 +199,21 @@
 
       <div class="section" style="padding-top:44px">
         <div class="controls-strip reveal" id="controls-strip"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <p class="eyebrow">Attack replay</p>
+          <h2>Watch one get through</h2>
+          <p>A real recorded trace, stepped through: the injection, the call it caused, the state it changed, and the finding that caught it.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card__head">
+            <div><h3 id="attack-title">Prompt injection</h3><span class="meta" id="attack-meta"></span></div>
+            <button class="btn btn--primary" id="attack-run" type="button">Play attack</button>
+          </div>
+          <div class="attack" id="attack"></div>
+        </div>
       </div>
 
       <div class="section">

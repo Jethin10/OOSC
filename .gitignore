@@ -18,8 +18,6 @@ results/raw/
 results/history/
 results/ci-next/
 results/history-next/
-results/demo/
-results/history-demo/
 scratch/
 .playwright-cli/
 *.log

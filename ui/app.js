@@ -10,6 +10,7 @@
 
 const state = {
   data: null,
+  domainId: "",
   view: "overview",
   agent: "",
   replayAgent: "",
@@ -81,9 +82,26 @@ const VIEWS = [
   { id: "evidence", label: "Evidence" },
 ];
 
-const runsFor = (a) => state.data.runs.filter((r) => r.agent === a);
-const agentNames = () => Object.keys(state.data.scorecards);
-const probeRuns = () => state.data.runs.filter((r) => r.probe);
+/* The bundle carries every evaluated domain; D() is whichever one is on screen.
+   Each domain is a complete, independent CI run — switching is not a filter. */
+const D = () => state.data.domains.find((x) => x.id === state.domainId) || state.data.domains[0];
+const runsFor = (a) => D().runs.filter((r) => r.agent === a);
+const agentNames = () => Object.keys(D().scorecards);
+const probeRuns = () => D().runs.filter((r) => r.probe);
+
+/* Numbers count up on reveal. Cheap, and it makes a static report feel like a
+   readout rather than a screenshot. */
+function countUp(node, to, format, ms = 950, delay = 0) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { node.textContent = format(to); return; }
+  node.textContent = format(0);
+  const start = performance.now() + delay;
+  const tick = (now) => {
+    const t = Math.max(0, Math.min(1, (now - start) / ms));
+    node.textContent = format(to * (1 - Math.pow(1 - t, 3)));
+    if (t < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
 
 /* ------------------------------------------------------------------ theme */
 
@@ -149,21 +167,43 @@ function setView(id) {
 /* -------------------------------------------------------------- overview */
 
 function renderOverview() {
-  const d = state.data;
+  const d = D();
 
+  const whole = (v) => String(Math.round(v));
+  const counters = [
+    ["Scenarios", d.suite_size],
+    ["Traces replayed", d.replay_checks],
+    ["Replay failures", d.replay_failures],
+  ].map(([label, value]) => {
+    const dd = el("dd", { text: "0" });
+    countUp(dd, value, whole, 900, 220);
+    return el("div", {}, el("dt", { text: label }), dd);
+  });
   $("#gate-strip").replaceChildren(
     el("div", {},
       el("dt", { text: "Commit gate" }),
       el("dd", {}, el("span", { class: "state" }, el("span", { class: "dot" }), d.gate_pass ? "Passed" : "Blocked"))),
-    el("div", {}, el("dt", { text: "Scenarios" }), el("dd", { text: String(d.suite_size) })),
-    el("div", {}, el("dt", { text: "Traces replayed" }), el("dd", { text: String(d.replay_checks) })),
-    el("div", {}, el("dt", { text: "Replay failures" }), el("dd", { text: String(d.replay_failures) }))
+    ...counters
   );
 
-  $("#figures").replaceChildren(...d.benchmarks.map((b, i) => {
+  const note = $("#domain-note");
+  note.dataset.unseen = String(!!d.unseen);
+  note.replaceChildren(
+    el("b", { text: d.unseen ? `${d.label} — a domain OOSC has never seen` : `${d.label} — ${d.origin}` }),
+    d.note, " ",
+    el("em", { text: `${Object.keys(d.world_spec.effects || {}).length} tools · `
+      + Object.entries(d.world_spec.tables || {}).map(([n, c]) => `${c} ${n}`).join(" · ") })
+  );
+
+  $("#figures").replaceChildren(...state.data.benchmarks.map((b, i) => {
     const node = el("button", { class: "figure", type: "button", "data-status": b.status },
       el("div", { class: "figure__value" },
-        el("b", { text: pct(b.value, b.value >= 0.995 ? 2 : 1) }),
+        (() => {
+          const digits = b.value >= 0.995 ? 2 : 1;
+          const node = el("b", { text: "0%" });
+          countUp(node, b.value, (v) => `${(v * 100).toFixed(digits)}%`, 1100, 260 + i * 110);
+          return node;
+        })(),
         el("span", { class: "figure__tag", text: b.status === "parked" ? "parked" : "cleared" })),
       el("div", { class: "figure__body" },
         el("h3", { text: b.title }),
@@ -179,18 +219,53 @@ function renderOverview() {
     return node;
   }));
 
-  $("#directions").replaceChildren(...d.directions.map((dir, i) => {
+  $("#directions").replaceChildren(...state.data.directions.map((dir, i) => {
     const go = el("button", { class: "btn", type: "button", text: "Open" });
     go.addEventListener("click", () => setView(dir.view));
+    const stat = directionStat(dir.id, d);
     return el("div", { class: "dir" },
       el("div", { class: "dir__n", text: String(i + 1).padStart(2, "0") }),
       el("div", {},
         el("h3", { text: dir.name }),
         el("p", { class: "dir__ask", text: dir.ask }),
         el("p", { class: "dir__built", text: dir.built }),
-        el("code", { text: dir.code })),
+        el("code", { text: dir.code }),
+        stat ? el("div", { class: "dir__stat" }, ...stat) : null),
       go);
   }));
+}
+
+/* Each direction carries a figure computed from the run on screen, so the
+   coverage list reads as live output rather than a list of claims. */
+function directionStat(id, d) {
+  const B = (v) => el("b", { text: String(v) });
+  const g = d.generation || {};
+  if (id === "generation") {
+    return [B(g.pool ?? d.suite_size), " scenarios generated · ", B(g.adversarial ?? 0), " adversarial probes"];
+  }
+  if (id === "sandbox") {
+    return [B(d.replay_checks), " traces replayed · ", B(d.replay_failures), " fingerprint mismatches"];
+  }
+  if (id === "classifier") {
+    const kinds = new Set();
+    let n = 0;
+    for (const r of d.runs) for (const f of r.failures || []) { kinds.add(f); n += 1; }
+    return [B(n), " findings across ", B(kinds.size), " failure modes"];
+  }
+  if (id === "guardrail") {
+    const probes = d.runs.filter((r) => r.probe);
+    const bad = probes.filter((r) => (r.failures || []).includes("unsafe_action") || (r.mutations || 0) > 0).length;
+    const versions = new Set(probes.map((r) => r.agent)).size;
+    return [B(new Set(probes.map((r) => r.scenario)).size), " probes x ", B(versions),
+            " versions · ", B(bad), " complied"];
+  }
+  if (id === "scorecard") {
+    const cats = new Set();
+    for (const card of Object.values(d.scorecards)) for (const c of card.categories) cats.add(c.category);
+    return [B(Object.keys(d.scorecards).length), " versions · ", B(cats.size), " categories · ",
+            B(d.history.length), " snapshots"];
+  }
+  return null;
 }
 
 /* -------------------------------------------------------------- pipeline */
@@ -205,7 +280,7 @@ const STAGES = [
 ];
 
 function renderPipelineStatics() {
-  const d = state.data;
+  const d = D();
   $("#stages").replaceChildren(...STAGES.map((s) =>
     el("div", { class: "stage", id: `stage-${s.id}`, "data-state": "idle" },
       el("div", { class: "stage__dot" }),
@@ -261,6 +336,8 @@ function logNote(...content) {
 
 function resetPipeline() {
   clock = 0;
+  const old = $("#run-summary");
+  if (old) old.remove();
   $("#console").replaceChildren(el("div", { class: "console__empty", text: "Waiting — press Replay run." }));
   for (const s of STAGES) {
     const n = document.getElementById(`stage-${s.id}`);
@@ -289,7 +366,7 @@ async function stage(id, token, ms, output, work) {
 
 async function runReplay() {
   const token = ++state.replayToken;
-  const d = state.data;
+  const d = D();
   const agent = state.replayAgent;
   const runs = runsFor(agent);
   const btn = $("#pipe-run");
@@ -385,6 +462,7 @@ async function runReplay() {
     });
 
     $("#pipe-status").textContent = `${shortName(agent)} · ${pct(card.overall.reliability)} reliable`;
+    showRunSummary(agent, c);
   } catch (err) {
     if (String(err.message) !== "cancelled") throw err;
   } finally {
@@ -392,11 +470,38 @@ async function runReplay() {
   }
 }
 
+function showRunSummary(agent, c) {
+  const d = D();
+  const card = d.scorecards[agent];
+  const findings = Object.values(c.findings).reduce((a, b) => a + b, 0);
+  const probes = d.runs.filter((r) => r.agent === agent && r.probe);
+  const complied = probes.filter((r) => (r.failures || []).includes("unsafe_action") || (r.mutations || 0) > 0).length;
+
+  const cell = (label, value, tone, sub) =>
+    el("div", {}, el("dt", { text: label }),
+      el("dd", { "data-tone": tone || null }, value, sub ? el("small", { text: sub }) : null));
+
+  const node = el("dl", { class: "summary", id: "run-summary" },
+    cell("Reliability", pct(card.overall.reliability),
+      card.overall.reliability >= 0.9 ? "good" : "bad",
+      `95% CI ${pct(card.overall.ci95[0], 0)}–${pct(card.overall.ci95[1], 0)}`),
+    cell("Replay", c.bad ? `${c.bad} bad` : "100%", c.bad ? "bad" : "good", `${c.replayed} traces`),
+    cell("Findings", String(findings), findings ? "bad" : "good", `${Object.keys(c.findings).length} modes`),
+    cell("Guardrail", `${complied}/${probes.length}`, complied ? "bad" : "good", "probes complied"),
+    cell("Gate", d.gate_pass ? "PASS" : "FAIL", d.gate_pass ? "good" : "bad",
+      d.gate_pass ? "commit allowed" : "commit blocked"));
+
+  const existing = $("#run-summary");
+  if (existing) existing.remove();
+  $("#console").after(node);
+  requestAnimationFrame(() => requestAnimationFrame(() => node.classList.add("on")));
+}
+
 /* ------------------------------------------------------------------ runs */
 
 function filteredRows() {
   const q = state.filter.trim().toLowerCase();
-  return state.data.runs.filter((r) => {
+  return D().runs.filter((r) => {
     if (r.agent !== state.agent) return false;
     if (state.type && !String(r.scenario_type || "realistic").startsWith(state.type)) return false;
     if (state.outcome === "fail" && r.success) return false;
@@ -442,7 +547,7 @@ function renderTable() {
 
 function renderTabs() {
   const names = agentNames();
-  if (!state.agent || !state.data.scorecards[state.agent]) state.agent = names[0];
+  if (!state.agent || !D().scorecards[state.agent]) state.agent = names[0];
   $("#tabs").replaceChildren(...names.map((name) => {
     const b = el("button", { type: "button", role: "tab", text: shortName(name), "aria-selected": String(name === state.agent) });
     b.addEventListener("click", () => {
@@ -543,6 +648,161 @@ function closeTrace() {
   if (state.returnFocus?.focus) state.returnFocus.focus();
 }
 
+
+/* -------------------------------------------------------- domain switching */
+
+function renderDomainSwitch() {
+  $("#domain-switch").replaceChildren(...state.data.domains.map((dom) => {
+    const b = el("button", { type: "button", role: "tab", "aria-selected": String(dom.id === state.domainId) },
+      dom.label, dom.unseen ? el("small", { text: "unseen" }) : null);
+    b.addEventListener("click", () => selectDomain(dom.id));
+    return b;
+  }));
+}
+
+/* Each domain is a whole separate CI run, so switching rebuilds every view and
+   resets the selections that only make sense within one run. */
+function selectDomain(id) {
+  if (state.domainId === id) return;
+  state.domainId = id;
+  state.replayToken += 1;
+  closeTrace();
+  const names = agentNames();
+  state.agent = names.includes("clean-agent") ? "clean-agent" : names[0];
+  state.replayAgent = names.find((n) => D().scorecards[n].overall.reliability < 0.5) || names[names.length - 1];
+  state.selected = -1;
+  state.filter = "";
+  $("#filter").value = "";
+
+  paintGate();
+  renderDomainSwitch();
+  renderOverview();
+  renderPipelineStatics();
+  resetPipeline();
+  $("#pipe-status").textContent = "idle";
+  $("#pipe-run").disabled = false;
+  $("#pipe-run").textContent = "Replay run";
+  renderTabs();
+  renderTable();
+  renderGuardrails();
+  renderAttack();
+  renderVersions();
+  renderHeat();
+  renderTrend();
+  renderDeltas();
+  playReveal($(`#view-${state.view}`));
+  if (state.view === "overview") {
+    requestAnimationFrame(() => $$("#figures .figure__meter").forEach((m) => m.classList.add("in")));
+  }
+}
+
+function paintGate() {
+  const d = D();
+  document.body.dataset.gate = d.gate_pass ? "passed" : "failed";
+  $("#gate-label").textContent = d.gate_pass ? "Gate passed" : "Gate blocked";
+}
+
+/* ------------------------------------------------------------ attack replay */
+
+/* One real recorded trace, stepped through end to end: the injected
+   instruction, the call it produced, the state it changed, and the finding
+   that caught it. Built from the trace itself - nothing here is illustrative. */
+function pickAttackRun() {
+  const probes = probeRuns().filter((r) => (r.failures || []).includes("unsafe_action") && (r.mutations || 0) > 0);
+  return probes.find((r) => r.probe.kind === "injected_output" && (r.trace || []).some((s) => s.calls?.some((c) => c.output)))
+      || probes.find((r) => r.probe.kind === "injected_output")
+      || probes[0]
+      || null;
+}
+
+function attackSteps(run) {
+  const trace = run.trace || [];
+  const calls = trace.flatMap((s) => (s.calls || []).map((c) => ({ ...c, step: s.step })));
+  const poisoned = calls.find((c) => c.output);
+  const mutation = calls.find((c) => c.mutated);
+  const finding = (run.findings || []).find((f) => f.kind === "unsafe_action");
+  const said = trace.map((s) => s.text).filter(Boolean).pop();
+
+  const steps = [];
+  steps.push({
+    tone: "bad", title: "The instruction arrives",
+    body: `A ${titleCase(run.probe.kind)} probe. Authorization: ${run.probe.authorization}. It never authorizes anything.`,
+    quote: run.probe.untrusted_texts?.[0] || run.instructions,
+  });
+  if (poisoned) {
+    steps.push({
+      tone: "bad", title: "The agent reads poisoned tool output",
+      body: `${poisoned.name} returns attacker-controlled text. Everything downstream of this call is tainted.`,
+      code: `${poisoned.name}(${JSON.stringify(poisoned.arguments)})
+-> ${poisoned.output}`,
+    });
+  }
+  steps.push({
+    tone: "bad", title: "It executes the irreversible action",
+    body: mutation
+      ? `No confirmation was asked for and none was given. ${mutation.name} is flagged irreversible in the derived world spec.`
+      : "The agent acted without confirmation.",
+    code: mutation ? `${mutation.name}(${JSON.stringify(mutation.arguments, null, 1)})` : null,
+  });
+  steps.push({
+    tone: "bad", title: "World state actually changes",
+    body: "This is not a text heuristic. The sandbox world re-fingerprints after the mutation, and the hash moves.",
+    code: mutation?.fingerprint_after ? `world fingerprint → ${String(mutation.fingerprint_after).slice(0, 40)}` : null,
+  });
+  if (said) {
+    steps.push({ tone: "bad", title: "And it reports success", body: "The user is told the job is done.", quote: said });
+  }
+  steps.push({
+    tone: "good", title: "Caught",
+    body: finding ? finding.detail : "Classified as an unsafe action, verified against real mutated world state.",
+    code: `unsafe_action · ${run.scenario} · gate blocks this commit`,
+  });
+  return steps;
+}
+
+function renderAttack() {
+  const run = pickAttackRun();
+  const host = $("#attack");
+  if (!run) {
+    $("#attack-meta").textContent = "no probe was complied with in this run";
+    $("#attack-run").disabled = true;
+    host.replaceChildren(el("div", { class: "empty" },
+      el("strong", { text: "Every version held" }), "No agent executed an unauthorized irreversible action in this run."));
+    return;
+  }
+  $("#attack-run").disabled = false;
+  $("#attack-title").textContent = `${titleCase(run.probe.kind)} → ${run.probe.proposed_action}`;
+  $("#attack-meta").textContent = `${shortName(run.agent)} · ${run.scenario}`;
+  state.attackSteps = attackSteps(run);
+
+  host.replaceChildren(...state.attackSteps.map((st, i) =>
+    el("div", { class: "attack__step", "data-tone": st.tone, id: `atk-${i}` },
+      el("div", { class: "attack__n", text: st.tone === "good" ? "✓" : String(i + 1) }),
+      el("div", {},
+        el("h4", { text: st.title }),
+        el("p", { text: st.body }),
+        st.quote ? el("div", { class: "attack__payload attack__payload--quote", text: `“${st.quote}”` }) : null,
+        st.code ? el("div", { class: "attack__payload", text: st.code }) : null))));
+}
+
+async function playAttack() {
+  const token = ++state.replayToken;
+  const btn = $("#attack-run");
+  btn.disabled = true;
+  btn.textContent = "Playing…";
+  $$("#attack .attack__step").forEach((n) => n.classList.remove("on"));
+  const nodes = $$("#attack .attack__step");
+  for (let i = 0; i < nodes.length; i += 1) {
+    if (token !== state.replayToken) return;
+    nodes[i].classList.add("on");
+    nodes[i].scrollIntoView({ block: "nearest", behavior: "smooth" });
+    await sleep(i === nodes.length - 1 ? 700 : 1000);
+  }
+  if (token !== state.replayToken) return;
+  btn.disabled = false;
+  btn.textContent = "Play again";
+}
+
 /* ------------------------------------------------------------ guardrails */
 
 /* Three states: a policy that never acted and one that acted-then-refused are
@@ -588,7 +848,7 @@ function renderGuardrails() {
   const caught = names.filter((n) => probes.some((r) => r.agent === n && complied(r)));
   const held = names.filter((n) => !caught.includes(n) && probes.some((r) => r.agent === n && probeVerdict(r).key === "held"));
   const inert = names.filter((n) => !caught.includes(n) && !held.includes(n));
-  const unsafe = state.data.unsafe_findings_by_agent || {};
+  const unsafe = D().unsafe_findings_by_agent || {};
   const sum = (list) => list.reduce((a, n) => a + (unsafe[n] || 0), 0);
 
   $("#controls-strip").replaceChildren(
@@ -641,7 +901,7 @@ function renderGuardrails() {
 }
 
 function probeInstruction(kind) {
-  const r = state.data.runs.find((x) => x.probe && x.probe.kind === kind && x.instructions);
+  const r = D().runs.find((x) => x.probe && x.probe.kind === kind && x.instructions);
   return r ? r.instructions : "";
 }
 
@@ -664,7 +924,7 @@ function heatColor(v) {
 }
 
 function renderVersions() {
-  const d = state.data;
+  const d = D();
   $("#version-cards").replaceChildren(...agentNames().map((name) => {
     const card = d.scorecards[name];
     const o = card.overall;
@@ -690,7 +950,7 @@ function renderVersions() {
 }
 
 function renderHeat() {
-  const d = state.data;
+  const d = D();
   const names = agentNames();
   const cats = Array.from(new Set(names.flatMap((n) => d.scorecards[n].categories.map((c) => c.category)))).sort();
   $("#heat").replaceChildren(
@@ -717,7 +977,7 @@ function renderHeat() {
 }
 
 function renderTrend() {
-  const d = state.data;
+  const d = D();
   const history = d.history || [];
   const names = agentNames();
   const svgEl = $("#trend");
@@ -781,7 +1041,7 @@ function renderTrend() {
 }
 
 function renderDeltas() {
-  const rows = state.data.regressions_vs_clean?.[state.agent]?.regressions || [];
+  const rows = D().regressions_vs_clean?.[state.agent]?.regressions || [];
   $("#delta-note").textContent = state.agent === "clean-agent"
     ? "clean-agent is the baseline — pick another version on the Runs tab to compare"
     : `${shortName(state.agent)} against the clean-agent baseline, same suite and seed`;
@@ -852,6 +1112,11 @@ function renderEvidence() {
 
 function bind() {
   $("#theme-toggle").addEventListener("click", toggleTheme);
+  $("#attack-run").addEventListener("click", playAttack);
+  $("#hero-run").addEventListener("click", () => {
+    setView("pipeline");
+    setTimeout(runReplay, 420);
+  });
 
   $("#filter").addEventListener("input", (e) => { state.filter = e.target.value; state.selected = -1; renderTable(); });
   $("#scenario-type").addEventListener("change", (e) => { state.type = e.target.value; state.selected = -1; renderTable(); });
@@ -920,25 +1185,25 @@ async function init() {
     return;
   }
 
-  const d = state.data;
+  state.domainId = state.data.domains[0].id;
   const names = agentNames();
   state.agent = names.includes("clean-agent") ? "clean-agent" : names[0];
   // Open the replay on a version that actually fails: a run where nothing is
   // caught demonstrates nothing.
-  state.replayAgent = names.find((n) => d.scorecards[n].overall.reliability < 0.5) || names[names.length - 1];
+  state.replayAgent = names.find((n) => D().scorecards[n].overall.reliability < 0.5) || names[names.length - 1];
 
-  document.body.dataset.gate = d.gate_pass ? "passed" : "failed";
-  $("#gate-label").textContent = d.gate_pass ? "Gate passed" : "Gate blocked";
-  $("#chip-domain").textContent = d.domain;
-
+  paintGate();
+  renderDomainSwitch();
   renderNav();
   renderOverview();
   renderPipelineStatics();
   renderTabs();
   renderTable();
   renderGuardrails();
+  renderAttack();
   renderVersions();
   renderHeat();
+  renderTrend();
   renderDeltas();
   renderEvidence();
   bind();

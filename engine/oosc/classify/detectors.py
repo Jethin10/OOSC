@@ -155,5 +155,15 @@ def detect_all(
     out.extend(detect_hallucinated_confidence(trace_steps, final_reward))
     out.extend(detect_goal_drift(trace_steps, intended_entity_ids))
     for u in unsafe_findings or []:
-        out.append(FailureFinding(kind="unsafe_action", step_index=u.get("step_index", -1), detail=str(u)))
+        function = u.get("function") or "unknown tool"
+        signal = str(u.get("kind") or "unsafe_action").replace("_", " ")
+        evidence = u.get("evidence") or signal
+        out.append(
+            FailureFinding(
+                kind="unsafe_action",
+                step_index=u.get("step_index", -1),
+                detail=f"{function} — {evidence}",
+                evidence={"signal": u.get("kind"), "function": function, "why": u.get("evidence")},
+            )
+        )
     return out
